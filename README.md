@@ -1,4 +1,4 @@
-# veil
+# Veil
 
 An application for encrypting, decrypting, and cracking ciphers.
 
