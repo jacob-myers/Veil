@@ -21,8 +21,8 @@ import 'package:veil/styles/styles.dart';
 class PageCipherShift extends StatefulWidget {
   Alphabet defaultAlphabet;
   Alphabet alphabet;
-  Cryptext myPlaintext;
-  Cryptext myCiphertext;
+  Cryptext plaintext;
+  Cryptext ciphertext;
   String mode;
 
   PageCipherShift({
@@ -33,8 +33,8 @@ class PageCipherShift extends StatefulWidget {
     this.mode = 'encrypt',
   })
   : alphabet = defaultAlphabet,
-    myPlaintext = plaintext ?? Cryptext(alphabet: defaultAlphabet),
-    myCiphertext = ciphertext ?? Cryptext(alphabet: defaultAlphabet);
+    plaintext = plaintext ?? Cryptext(alphabet: defaultAlphabet),
+    ciphertext = ciphertext ?? Cryptext(alphabet: defaultAlphabet);
 
   @override
   State<PageCipherShift> createState() => _PageCipherShift();
@@ -81,8 +81,8 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
   void setPlaintextThenCiphertext(Cryptext cryptext) {
     setState(() {
       cryptext.alphabet = widget.alphabet;
-      widget.myPlaintext = cryptext;
-      widget.myCiphertext = cryptShift(widget.myPlaintext, shift);
+      widget.plaintext = cryptext;
+      widget.ciphertext = cryptShift(widget.plaintext, shift);
     });
   }
 
@@ -90,8 +90,8 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
   void setCiphertextThenPlaintext(Cryptext cryptext) {
     setState(() {
       cryptext.alphabet = widget.alphabet;
-      widget.myCiphertext = cryptext;
-      widget.myPlaintext = cryptShift(widget.myCiphertext, -shift);
+      widget.ciphertext = cryptext;
+      widget.plaintext = cryptShift(widget.ciphertext, -shift);
     });
   }
 
@@ -159,15 +159,15 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
 
     if (widget.mode == 'encrypt'){
       // Initializes ciphertext from plaintext.
-      setPlaintextThenCiphertext(widget.myPlaintext);
+      setPlaintextThenCiphertext(widget.plaintext);
     }
     if (widget.mode == 'decrypt') {
       // Initializes plaintext from ciphertext.
-      setCiphertextThenPlaintext(widget.myCiphertext);
+      setCiphertextThenPlaintext(widget.ciphertext);
     }
     if (widget.mode == 'break') {
       // Initializes plaintext from ciphertext.
-      setCiphertextThenPlaintext(widget.myCiphertext);
+      setCiphertextThenPlaintext(widget.ciphertext);
     }
 
     return Scaffold(
@@ -194,8 +194,8 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
           alphabet: widget.alphabet,
           setPlaintext: setPlaintextThenCiphertext,
           setCiphertext: setCiphertextThenPlaintext,
-          plaintext: widget.myPlaintext,
-          ciphertext: widget.myCiphertext,
+          plaintext: widget.plaintext,
+          ciphertext: widget.ciphertext,
         ),
 
         Divider(height: 30),
@@ -213,7 +213,6 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
                       ShiftAmountEntry(
                           alphabet: widget.alphabet,
                           setShift: setShift,
-                          title: 'Shift of plaintext (k)',
                           shift: shift
                       ),
 
@@ -287,7 +286,7 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
             child: ListView.separated(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: widget.myCiphertext.alphabet.length,
+              itemCount: widget.ciphertext.alphabet.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   child: MouseRegion(
@@ -300,7 +299,7 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
                         ),
                         SizedBox(width: 10),
                         PartialTextDisplay(
-                          cryptext: cryptShift(widget.myCiphertext, -index),
+                          cryptext: cryptShift(widget.ciphertext, -index),
                         )
                       ],
                     ),

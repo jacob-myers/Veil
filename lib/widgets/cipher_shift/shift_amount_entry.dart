@@ -12,16 +12,12 @@ import 'package:veil/styles/styles.dart';
 class ShiftAmountEntry extends StatefulWidget {
   final Alphabet alphabet;
   final Function(int?) setShift;
-  final String title;
-  final String hintText;
   final int shift;
 
   const ShiftAmountEntry({
     super.key,
     required this.alphabet,
     required this.setShift,
-    this.title = 'Shift amount (k)',
-    this.hintText = 'Enter a shift...',
     this.shift = 0,
   });
 
@@ -36,8 +32,8 @@ class _ShiftAmountEntry extends State<ShiftAmountEntry> {
   Widget build(BuildContext context) {
     return IntegerValueEntry(
       alphabet: widget.alphabet,
-      title: widget.title,
-      hintText: widget.hintText,
+      title: 'Shift of plaintext (k)',
+      hintText: 'Enter a shift...',
       errorText: shiftAmountError,
       value: widget.shift,
       onChanged: (String str) {
