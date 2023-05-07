@@ -206,6 +206,7 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
             // Left Column.
             Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,6 +222,14 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
                       AlphabetSpaceDisplay(alphabet: widget.alphabet)
                     ],
                   ),
+
+                  SizedBox(height: 10),
+
+                  Text(
+                    "Mathematical Algorithm: C(p) = p + k (mod(n))",
+                    style: CustomStyle.bodyLargeText,
+                  ),
+
                 ],
               ),
             ),

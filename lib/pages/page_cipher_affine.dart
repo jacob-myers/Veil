@@ -176,22 +176,35 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Row(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AEntry(
-                    alphabet: widget.alphabet,
-                    setA: setA,
-                    a: a,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AEntry(
+                        alphabet: widget.alphabet,
+                        setA: setA,
+                        a: a,
+                      ),
+                      SizedBox(width: 20),
+                      BEntry(
+                        alphabet: widget.alphabet,
+                        setB: setB,
+                        b: b,
+                      ),
+                      SizedBox(width: 20),
+                      AlphabetSpaceDisplay(alphabet: widget.alphabet),
+                    ],
                   ),
-                  SizedBox(width: 20),
-                  BEntry(
-                    alphabet: widget.alphabet,
-                    setB: setB,
-                    b: b,
+
+                  SizedBox(height: 10),
+
+                  Text(
+                    "Mathematical Algorithm: C(p) = ap + bq (mod(n))",
+                    style: CustomStyle.bodyLargeText,
                   ),
-                  SizedBox(width: 20),
-                  AlphabetSpaceDisplay(alphabet: widget.alphabet),
+
                 ],
               )
             ),
