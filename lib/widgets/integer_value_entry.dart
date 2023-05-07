@@ -9,7 +9,6 @@ import 'package:veil/styles/styles.dart';
 // On lose/gain focus: https://stackoverflow.com/questions/47965141/how-to-listen-focus-change-in-flutter
 
 class IntegerValueEntry extends StatefulWidget {
-  final Alphabet alphabet;
   final Function(String) onChanged;
   final String? title;
   final String hintText;
@@ -19,7 +18,6 @@ class IntegerValueEntry extends StatefulWidget {
 
   const IntegerValueEntry({
     super.key,
-    required this.alphabet,
     required this.onChanged,
     this.title,
     this.hintText = 'Enter a value...',

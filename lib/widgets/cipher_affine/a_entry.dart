@@ -32,7 +32,6 @@ class _AEntry extends State<AEntry> {
   @override
   Widget build(BuildContext context) {
     return IntegerValueEntry(
-      alphabet: widget.alphabet,
       title: 'Coefficient A',
       hintText: 'Enter A...',
       errorText: error,

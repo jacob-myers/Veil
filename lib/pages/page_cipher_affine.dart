@@ -201,7 +201,7 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
                   SizedBox(height: 10),
 
                   Text(
-                    "Mathematical Algorithm: C(p) = ap + bq (mod(n))",
+                    "Mathematical Algorithm: C(p) = ap + b (mod(n))",
                     style: CustomStyle.bodyLargeText,
                   ),
 

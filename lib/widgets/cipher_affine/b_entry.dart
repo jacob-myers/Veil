@@ -32,7 +32,6 @@ class _BEntry extends State<BEntry> {
   @override
   Widget build(BuildContext context) {
     return IntegerValueEntry(
-      alphabet: widget.alphabet,
       title: 'Coefficient B',
       hintText: 'Enter B...',
       errorText: error,

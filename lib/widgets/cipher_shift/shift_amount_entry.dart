@@ -31,7 +31,6 @@ class _ShiftAmountEntry extends State<ShiftAmountEntry> {
   @override
   Widget build(BuildContext context) {
     return IntegerValueEntry(
-      alphabet: widget.alphabet,
       title: 'Shift of plaintext (k)',
       hintText: 'Enter a shift...',
       errorText: shiftAmountError,
