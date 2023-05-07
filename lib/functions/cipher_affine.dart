@@ -40,7 +40,7 @@ Cryptext affineDecrypt(Cryptext input, int a, int b) {
     return ((x - b) * a_inv) % input.alphabet.length;
   }).toList();
 
-  return Cryptext.fromIntList(intVecFinal);
+  return Cryptext.fromIntList(intVecFinal, alphabet: input.alphabet);
 }
 
 /// Finds a and b from a known plaintext and ciphertext.
