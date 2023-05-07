@@ -3,6 +3,10 @@ import 'package:veil/data_structures/cryptext.dart';
 /// Performs a rail fence encryption on given input with numRails number of
 /// rails, and an offset of offset.
 Cryptext railFenceEncrypt(Cryptext input, int numRails, int offset) {
+  if (numRails == 1) {
+    return Cryptext.fromString(input.lettersInAlphabet.join(), alphabet: input.alphabet);
+  }
+
   List<String> rails = List.generate(numRails, (index) => "");
   var inputOnlyValid = input.lettersInAlphabet;
 
@@ -16,7 +20,7 @@ Cryptext railFenceEncrypt(Cryptext input, int numRails, int offset) {
     }
   }
 
-  return Cryptext.fromString(rails.join());
+  return Cryptext.fromString(rails.join(), alphabet: input.alphabet);
 }
 
 /// Performs a rail fence decryption on a given input with numRails number of
@@ -24,6 +28,10 @@ Cryptext railFenceEncrypt(Cryptext input, int numRails, int offset) {
 /// Unlike the encryption method, this is done by constructing a rail fence
 /// matrix.
 Cryptext railFenceDecrypt(Cryptext input, int numRails, int offset) {
+  if (numRails == 1) {
+    return Cryptext.fromString(input.lettersInAlphabet.join(), alphabet: input.alphabet);
+  }
+
   var inputOnlyValid = input.lettersInAlphabet;
   var matrix = buildEmptyRailMatrix(inputOnlyValid.length, numRails, offset);
   int indexAt = 0;
@@ -47,12 +55,16 @@ Cryptext railFenceDecrypt(Cryptext input, int numRails, int offset) {
     }
   }
 
-  return Cryptext.fromString(plaintext);
+  return Cryptext.fromString(plaintext, alphabet: input.alphabet);
 }
 
 /// Builds an empty rail matrix for the given key. Empty spaces are denoted by
 /// " " and spaces for characters are denoted by "-".
 List<List<String>> buildEmptyRailMatrix(int msgLength, int numRails, int offset) {
+  if(numRails == 1) {
+    return [List.generate(msgLength, (index) => '-')];
+  }
+
   List<List<String>> matrix = List.generate(numRails, (i) => List.generate(msgLength, (j) => " "), growable: false);
 
   int line = getStartingRail(numRails, offset);
@@ -71,6 +83,10 @@ List<List<String>> buildEmptyRailMatrix(int msgLength, int numRails, int offset)
 /// Finds the rail to start placing letters on with the given number of rails
 /// and offset.
 int getStartingRail(int numRails, int offset) {
+  if (numRails <= 1) {
+    return 0;
+  }
+
   List<int> rail = List.generate(numRails * 2 - 2, (index) => index < numRails ? index : (numRails * 2 - 2) - index);
   return rail[offset % (numRails * 2 - 2)];
 }

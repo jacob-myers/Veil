@@ -49,7 +49,7 @@ class _BEntry extends State<BEntry> {
             // Didn't parse
             error = 'Invalid B';
           }
-          else if (newB <= 0 || newB > widget.alphabet.length) {
+          else if (newB < 0 || newB > widget.alphabet.length) {
             // Entry is out of range
             error = 'Value out of range';
           }
