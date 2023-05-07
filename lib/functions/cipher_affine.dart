@@ -1,3 +1,4 @@
+import 'package:tuple/tuple.dart';
 import 'package:veil/data_structures/cryptext.dart';
 import 'package:veil/functions/euclidean_alg.dart';
 import 'package:veil/functions/mod_inv.dart';
@@ -9,10 +10,14 @@ bool isValidAffineParams(Cryptext input, int a) {
   return euclidAlg(a, n) == 1;
 }
 
+bool isValidAffineParamsWithMod(int a, int n) {
+  return euclidAlg(a, n) == 1;
+}
+
 /// Encrypt input with an affine cipher with k = a, b. Where C(p) = ap + b
 Cryptext affineEncrypt(Cryptext input, int a, int b) {
   if (!isValidAffineParams(input, a)) {
-    throw Exception("AffineParametersError");
+    throw Exception("AffineParametersError: $a in ${input.alphabet.length}");
   }
 
   List<int> intVecFinal = input.numeralized.map((x) {
@@ -38,6 +43,25 @@ Cryptext affineDecrypt(Cryptext input, int a, int b) {
   return Cryptext.fromIntList(intVecFinal);
 }
 
+/// Finds a and b from a known plaintext and ciphertext.
+/// Throws an error if there are no valid pairs.
+Tuple2<int, int> findAB(Cryptext p, Cryptext c) {
+  for (int i = 0; i < p.length; i++) {
+    for (int j = i; j < p.length; j++) {
+      int p1 = p.numeralized[i];
+      int p2 = p.numeralized[j];
+      int c1 = c.numeralized[i];
+      int c2 = c.numeralized[j];
+      if (euclidAlg(p1 - p2, p.alphabet.length) == 1) {
+        int a = p.alphabet.mod(modInv(p1 - p2, p.alphabet.length) * (c1 - c2));
+        int b = p.alphabet.mod((c1 - (p1 * a)));
+        return Tuple2(a, b);
+      }
+    }
+  }
+  throw Exception('NoValidPair');
+}
+
 void main () {
   Cryptext p = Cryptext.fromString('MY TEXT');
   Cryptext c = affineEncrypt(p, 5, 14);
@@ -46,4 +70,6 @@ void main () {
   print(p);
   print(c);
   print(p_decrypted);
+
+  print(affineEncrypt(Cryptext.fromString('UNCHANGED'), 1, 0));
 }
