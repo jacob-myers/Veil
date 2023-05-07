@@ -44,6 +44,7 @@ app.*.map.json
 /android/app/release
 
 .metadata
+pubspec.lock
 
 # Source files for original icon.
 /art_project_files
