@@ -57,52 +57,84 @@ class _IntegerValueEntry extends State<IntegerValueEntry> {
 
           SizedBox(height: 10),
 
-          IntrinsicHeight(
-            child: Focus(
-              child: TextField(
-                style: CustomStyle.textFieldEntry,
+          Row(
+            children: [
+              // Flexible is necessary to put it in Row. It constrains the height.
+              Flexible(
+                child: Focus(
+                  child: TextField(
+                      style: CustomStyle.textFieldEntry,
 
-                keyboardType: TextInputType.text,
+                      keyboardType: TextInputType.text,
 
-                focusNode: focusNode,
-                controller: textFieldController,
+                      focusNode: focusNode,
+                      controller: textFieldController,
 
-                textInputAction: TextInputAction.done,
-                maxLines: 1,
+                      textInputAction: TextInputAction.done,
+                      maxLines: 1,
 
-                // Styling.
-                cursorColor: CustomStyle.pageScheme.onPrimary,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: CustomStyle.pageScheme.onPrimary, width: 1)
+                      // Styling.
+                      cursorColor: CustomStyle.pageScheme.onPrimary,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: CustomStyle.pageScheme.onPrimary, width: 1)
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: CustomStyle.pageScheme.onPrimary, width: 1)
+                        ),
+                        errorText: hideError ? null : widget.errorText,
+                        hintText: widget.hintText,
+                      ),
+
+                      onSubmitted: (String str) {
+                        focusNode.requestFocus();
+                      },
+
+                      // When the text is changed.
+                      onChanged: (String str) {
+                        hideError = false;
+                        widget.onChanged(str);
+                      }
                   ),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: CustomStyle.pageScheme.onPrimary, width: 1)
-                  ),
-                  errorText: hideError ? null : widget.errorText,
-                  hintText: widget.hintText,
+
+                  onFocusChange: (hasFocus) {
+                    setState(() {
+                      if (!hasFocus) {
+                        hideError = true;
+                      }
+                    });
+                  },
                 ),
-
-                onSubmitted: (String str) {
-                  focusNode.requestFocus();
-                },
-
-                // When the text is changed.
-                onChanged: (String str) {
-                  hideError = false;
-                  widget.onChanged(str);
-                }
               ),
 
-              onFocusChange: (hasFocus) {
-                setState(() {
-                  if (!hasFocus) {
-                    hideError = true;
-                  }
-                });
-              },
-            )
-          ),
+              SizedBox(width: 4),
+
+              Column(
+                children: [
+                  InkWell(
+                    child: Icon(
+                      Icons.arrow_drop_up_outlined,
+                      size: 28,
+                    ),
+                    onTap: () {
+                      widget.onChanged((widget.value + 1).toString());
+                    },
+                  ),
+                  InkWell(
+                    child: Icon(
+                      Icons.arrow_drop_down_outlined,
+                      size: 28,
+                    ),
+                    onTap: () {
+                      widget.onChanged((widget.value - 1).toString());
+                    },
+                  ),
+
+                ],
+              ),
+
+            ],
+          )
 
         ],
       ),

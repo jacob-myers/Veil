@@ -123,6 +123,9 @@ int getStartingRail(int numRails, int offset) {
 
 /// Finds the modulus that will be applied to the offset.
 int getOffsetSpace(int numRails) {
+  if (numRails == 0) {
+    return 0;
+  }
   return numRails * 2 - 2;
 }
 
