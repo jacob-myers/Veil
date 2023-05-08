@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:veil/functions/cipher_rail_fence.dart';
 
@@ -7,17 +6,12 @@ import 'package:veil/pages/cipher_page_state.dart';
 import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/cryptext.dart';
 import 'package:veil/data_structures/break_method.dart';
-import 'package:veil/functions/cipher_shift.dart';
 import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/appbar_cipher_page.dart';
-import 'package:veil/widgets/break_method_list.dart';
 import 'package:veil/widgets/crypt_io/crypt_io.dart';
-import 'package:veil/widgets/alphabet_space_display.dart';
-import 'package:veil/widgets/partial_text_display.dart';
-import 'package:veil/widgets/ciphertext_plaintext_pair_entry.dart';
-import 'package:veil/widgets/cipher_shift/shift_amount_entry.dart';
 import 'package:veil/widgets/cipher_rail_fence/offset_entry.dart';
 import 'package:veil/widgets/cipher_rail_fence/num_rails_entry.dart';
+import 'package:veil/widgets/disabled_text_display.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
@@ -175,7 +169,10 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
 
                       SizedBox(width: 20),
 
-                      AlphabetSpaceDisplay(alphabet: widget.alphabet)
+                      DisabledTextDisplay(
+                          title: "Offset Space",
+                          content: getOffsetSpace(numRails).toString()
+                      ),
                     ],
                   ),
                   SizedBox(height: 10),

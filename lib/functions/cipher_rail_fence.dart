@@ -94,7 +94,7 @@ String buildRailMatrixVisual(Cryptext input, int numRails, int offset) {
   List<String> result = List.generate(numRails, (index) => "");
 
   for (int i = 0; i < inputOnlyValid.length; i++) {
-    for (int j = 0; j < numRails; j++) {
+    for (int j = 0; j < numRails && j < inputOnlyValid.length; j++) {
       if (matrix[j][i] == '-') {
         result[j] += inputOnlyValid[indexAt];
         indexAt++;
@@ -117,8 +117,13 @@ int getStartingRail(int numRails, int offset) {
     return 0;
   }
 
-  List<int> rail = List.generate(numRails * 2 - 2, (index) => index < numRails ? index : (numRails * 2 - 2) - index);
-  return rail[offset % (numRails * 2 - 2)];
+  List<int> rail = List.generate(getOffsetSpace(numRails), (index) => index < numRails ? index : getOffsetSpace(numRails) - index);
+  return rail[offset % getOffsetSpace(numRails)];
+}
+
+/// Finds the modulus that will be applied to the offset.
+int getOffsetSpace(int numRails) {
+  return numRails * 2 - 2;
 }
 
 void main() {

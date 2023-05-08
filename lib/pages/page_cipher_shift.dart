@@ -10,13 +10,14 @@ import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/appbar_cipher_page.dart';
 import 'package:veil/widgets/break_method_list.dart';
 import 'package:veil/widgets/crypt_io/crypt_io.dart';
-import 'package:veil/widgets/alphabet_space_display.dart';
 import 'package:veil/widgets/partial_text_display.dart';
 import 'package:veil/widgets/ciphertext_plaintext_pair_entry.dart';
 import 'package:veil/widgets/cipher_shift/shift_amount_entry.dart';
+import 'package:veil/widgets/disabled_text_display.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
+
 
 class PageCipherShift extends StatefulWidget {
   Alphabet defaultAlphabet;
@@ -219,7 +220,10 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
 
                       SizedBox(width: 20),
 
-                      AlphabetSpaceDisplay(alphabet: widget.alphabet)
+                      DisabledTextDisplay(
+                          title: "Alphabet Space",
+                          content: widget.alphabet.length.toString()
+                      ),
                     ],
                   ),
 

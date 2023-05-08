@@ -45,7 +45,7 @@ class _NumRailsEntry extends State<NumRailsEntry> {
             // Didn't parse
             error = 'Invalid amount';
           }
-          else if (newNumRails < 0) {
+          else if (newNumRails < 0 || newNumRails > 9999) {
             // Entry if out of range
             error = 'Value out of range';
           }
