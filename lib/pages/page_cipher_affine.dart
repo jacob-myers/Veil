@@ -80,7 +80,9 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
       widget.plaintext = cryptext;
       try {
         widget.ciphertext = affineEncrypt(widget.plaintext, a, b);
-      } catch(e) { }
+      } catch(e) {
+        widget.ciphertext = Cryptext(letters: widget.plaintext.lettersInAlphabet);
+      }
     });
   }
 
@@ -91,7 +93,9 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
       widget.ciphertext = cryptext;
       try {
         widget.plaintext = affineDecrypt(widget.ciphertext, a, b);
-      } catch (e) { }
+      } catch (e) {
+        widget.plaintext = Cryptext(letters: widget.ciphertext.lettersInAlphabet);
+      }
     });
   }
 
