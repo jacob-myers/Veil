@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:veil/functions/cipher_rail_fence.dart';
 
@@ -44,6 +45,7 @@ class PageCipherRailFence extends StatefulWidget {
 }
 
 class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageState {
+  String visual = "";
   int numRails = 1;
   int offset = 0;
 
@@ -58,6 +60,7 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
       cryptext.alphabet = widget.alphabet;
       widget.plaintext = cryptext;
       widget.ciphertext = railFenceEncrypt(widget.plaintext, numRails, offset);
+      visual = buildRailMatrixVisual(widget.plaintext, numRails, offset);
     });
   }
 
@@ -67,6 +70,7 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
       cryptext.alphabet = widget.alphabet;
       widget.ciphertext = cryptext;
       widget.plaintext = railFenceDecrypt(widget.ciphertext, numRails, offset);
+      visual = buildRailMatrixVisual(widget.plaintext, numRails, offset);
     });
   }
 
@@ -129,6 +133,8 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
   }
 
   Widget getBody(BuildContext context) {
+    ScrollController controller = ScrollController();
+
     return Column(
       children: [
         CryptIO(
@@ -172,7 +178,24 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
                       AlphabetSpaceDisplay(alphabet: widget.alphabet)
                     ],
                   ),
+                  SizedBox(height: 10),
 
+                  Text("Layout", style: CustomStyle.headers),
+                  SizedBox(height: 10),
+
+                  Scrollbar(
+                    controller: controller,
+                    child: SingleChildScrollView(
+                      controller: controller,
+                      scrollDirection: Axis.horizontal,
+                      child: Text(
+                        visual,
+                        style: CustomStyle.bodyLargeTextMono,
+                      ),
+                    ),
+                    isAlwaysShown: true,
+                    scrollbarOrientation: ScrollbarOrientation.bottom,
+                  ),
                 ],
               ),
             ),

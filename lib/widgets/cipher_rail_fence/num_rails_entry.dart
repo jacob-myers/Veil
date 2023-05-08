@@ -32,7 +32,6 @@ class _NumRailsEntry extends State<NumRailsEntry> {
       title: 'Number of Rails',
       hintText: 'Rails...',
       errorText: error,
-      defaultValue: 1,
       value: widget.numRails,
       onChanged: (String str) {
         setState(() {
@@ -40,13 +39,13 @@ class _NumRailsEntry extends State<NumRailsEntry> {
           if (newNumRails == null && str == '') {
             // Empty
             error = null;
-            widget.setNumRails(1);
+            widget.setNumRails(0);
           }
           else if (newNumRails == null) {
             // Didn't parse
             error = 'Invalid amount';
           }
-          else if (newNumRails < 1) {
+          else if (newNumRails < 0) {
             // Entry if out of range
             error = 'Value out of range';
           }

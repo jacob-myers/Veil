@@ -77,4 +77,10 @@ class CustomStyle {
     color: pageScheme.onSecondary,
   );
 
+  static TextStyle bodyLargeTextMono = TextStyle(
+    fontSize: 20,
+    fontFamily: 'JetBrainsMono',
+    color: pageScheme.onSecondary,
+  );
+
 }
