@@ -1,3 +1,5 @@
+import 'package:collection/equality.dart';
+
 // Class containing an alphabet. Default is all uppercase english letters.
 
 class Alphabet {
@@ -78,10 +80,25 @@ class Alphabet {
     // Uses the get letters getter.
     return lettersAsString;
   }
+
+  @override
+  bool operator ==(Object o) {
+    if (o is! Alphabet) {
+      return false;
+    }
+    if (!IterableEquality().equals(o.letters, letters)) {
+      return false;
+    }
+    return true;
+  }
 }
 
 /// Testing function to see if properties of Alphabet worked as intended.
-void testAlphabet () {
+void main () {
   Alphabet defaultAlphabet = Alphabet.fromString(letters : 'ABCD');
   print(defaultAlphabet.lettersAsString);
+
+  var a1 = Alphabet.fromString(letters: "ABC");
+  var a2 = Alphabet.fromString(letters: "ABCD");
+  print(a1 == a2);
 }

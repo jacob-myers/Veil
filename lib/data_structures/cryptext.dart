@@ -1,3 +1,4 @@
+import 'package:collection/equality.dart';
 import 'package:veil/data_structures/alphabet.dart';
 
 class Cryptext {
@@ -113,10 +114,21 @@ class Cryptext {
     // Uses the get letters getter.
     return lettersAsString;
   }
+
+  @override
+  bool operator ==(Object o) {
+    if (o is! Cryptext) {
+      return false;
+    }
+    if (!IterableEquality().equals(o.letters, letters)) {
+      return false;
+    }
+    return true;
+  }
 }
 
 /// Testing function to see if properties of Cryptext worked as intended.
-void testCryptext () {
+void main () {
   Cryptext myText = Cryptext.fromString('Hello');
   print(myText);
   print(myText.numeralized);
@@ -126,4 +138,8 @@ void testCryptext () {
 
   Cryptext fromInts = Cryptext.fromIntList([2, 5, 1]);
   print(fromInts);
+
+  Cryptext text1 = Cryptext.fromString('Hell');
+  Cryptext text2 = Cryptext.fromString('Hello');
+  print(text1 == text2);
 }

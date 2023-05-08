@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 // Local
 import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/cryptext.dart';
+import 'package:veil/pages/page_cipher_affine.dart';
+import 'package:veil/pages/page_cipher_rail_fence.dart';
 import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/cipher_selection_button.dart';
 import 'package:veil/pages/page_cipher_shift.dart';
@@ -77,15 +79,16 @@ class _HomePage extends State<HomePage> {
                         Divider(),
 
                         CipherSelectionButton(
-                          text: 'Second Cipher',
-                          targetPage: () => PageCipherShift(defaultAlphabet: myDefaultAlphabet),
+                          text: 'Rail Fence Cipher',
+                          targetPage: () => PageCipherRailFence(defaultAlphabet: myDefaultAlphabet),
                         ),
                         Divider(),
 
                         CipherSelectionButton(
-                          text: 'Third Cipher',
-                          targetPage: () => PageCipherShift(defaultAlphabet: myDefaultAlphabet),
+                          text: 'Affine Cipher',
+                          targetPage: () => PageCipherAffine(defaultAlphabet: myDefaultAlphabet),
                         ),
+
                       ],
                     ),
                   )

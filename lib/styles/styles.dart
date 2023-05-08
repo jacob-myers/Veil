@@ -57,15 +57,6 @@ class CustomStyle {
   static Color disabledTextEntryBorderColor = const Color(0xFF4E4E4E);
   static Color normalBlue = const Color(0xFF40B4F2);
 
-  /*
-  static TextStyle ioText = TextStyle(
-    color: pageScheme.onPrimary,
-    fontSize: 20,
-    fontFamily: '',
-  );
-
-   */
-
   static TextStyle cipherSelectionButton = TextStyle(
     fontSize: 20,
     color: pageScheme.onSecondary,
@@ -78,6 +69,17 @@ class CustomStyle {
 
   static TextStyle darkButton = TextStyle(
     fontSize: 20,
+    color: pageScheme.onSecondary,
+  );
+
+  static TextStyle bodyLargeText = TextStyle(
+    fontSize: 20,
+    color: pageScheme.onSecondary,
+  );
+
+  static TextStyle bodyLargeTextMono = TextStyle(
+    fontSize: 20,
+    fontFamily: 'JetBrainsMono',
     color: pageScheme.onSecondary,
   );
 
