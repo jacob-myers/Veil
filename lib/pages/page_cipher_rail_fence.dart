@@ -180,7 +180,7 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
                   ),
                   SizedBox(height: 10),
 
-                  Text("Layout", style: CustomStyle.headers),
+                  Text("Layout Visual", style: CustomStyle.headers),
                   SizedBox(height: 10),
 
                   Scrollbar(
