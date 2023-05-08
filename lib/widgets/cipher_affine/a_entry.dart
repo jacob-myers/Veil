@@ -19,7 +19,7 @@ class AEntry extends StatefulWidget {
     super.key,
     required this.alphabet,
     required this.setA,
-    this.a = 1,
+    this.a = 0,
   });
 
   @override
@@ -35,7 +35,6 @@ class _AEntry extends State<AEntry> {
       title: 'Coefficient A',
       hintText: 'Enter A...',
       errorText: error,
-      defaultValue: 1,
       value: widget.a,
       onChanged: (String str) {
         setState(() {
@@ -43,7 +42,7 @@ class _AEntry extends State<AEntry> {
           if (newA == null && str == '') {
             // Empty
             error = null;
-            widget.setA(1);
+            widget.setA(0);
           }
           else if (newA == null) {
             // Didn't parse
