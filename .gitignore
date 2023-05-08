@@ -43,6 +43,11 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Firebase
+.firebase/
+.firebaserc
+firebase.json
+
 .metadata
 pubspec.lock
 
