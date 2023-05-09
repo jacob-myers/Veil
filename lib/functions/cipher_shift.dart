@@ -1,5 +1,4 @@
 import 'package:veil/data_structures/cryptext.dart';
-import 'package:veil/data_structures/alphabet.dart';
 
 /// Performs a shift of shift on the given cryptext.
 Cryptext cryptShift(Cryptext cryptext, int shift) {

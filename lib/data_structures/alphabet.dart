@@ -16,7 +16,7 @@ class Alphabet {
   /// Duplicates are removed.
   factory Alphabet.fromString({required String letters}) {
     return Alphabet(
-        letters : letters.split('').toSet().toList()
+      letters : letters.split('').toSet().toList()
     );
   }
 
@@ -98,7 +98,13 @@ void main () {
   Alphabet defaultAlphabet = Alphabet.fromString(letters : 'ABCD');
   print(defaultAlphabet.lettersAsString);
 
+  // Not equal.
   var a1 = Alphabet.fromString(letters: "ABC");
   var a2 = Alphabet.fromString(letters: "ABCD");
+  print(a1 == a2);
+
+  // Not equal.
+  a1 = Alphabet.fromString(letters: "ABCD");
+  a2 = Alphabet.fromString(letters: "BCDA");
   print(a1 == a2);
 }
