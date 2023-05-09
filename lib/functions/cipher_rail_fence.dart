@@ -103,9 +103,11 @@ String buildRailMatrixVisual(Cryptext input, int numRails, int offset) {
       }
     }
   }
-  // Newlines on all rows.
-  for(int i = 0 ; i < result.length; i++) {
-    result[i] += '\n';
+  // Newlines on all non-empty rows.
+  for(int i = 0 ; i < result.length - 1; i++) {
+    if (result[i].replaceAll(' ', '') != '') {
+      result[i] += '\n';
+    }
   }
   return result.join();
 }

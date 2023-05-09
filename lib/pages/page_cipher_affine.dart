@@ -176,58 +176,70 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
 
         Divider(height: 30),
 
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AEntry(
-                        alphabet: widget.alphabet,
-                        setA: setA,
-                        a: a,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: AEntry(
+                              alphabet: widget.alphabet,
+                              setA: setA,
+                              a: a,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: BEntry(
+                              alphabet: widget.alphabet,
+                              setB: setB,
+                              b: b,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: DisabledTextDisplay(
+                                title: "Alphabet Space",
+                                content: widget.alphabet.length.toString()
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 20),
-                      BEntry(
-                        alphabet: widget.alphabet,
-                        setB: setB,
-                        b: b,
+
+                      const SizedBox(height: 10),
+
+                      Text(
+                        "Mathematical Algorithm: C(p) = ap + b (mod(n))",
+                        style: CustomStyle.bodyLargeText,
                       ),
-                      SizedBox(width: 20),
-                      DisabledTextDisplay(
-                        title: "Alphabet Space",
-                        content: widget.alphabet.length.toString()
-                      ),
+
                     ],
-                  ),
+                  )
+              ),
 
-                  SizedBox(height: 10),
+              const VerticalDivider(
+                width: 40,
+                thickness: 2,
+              ),
 
-                  Text(
-                    "Mathematical Algorithm: C(p) = ap + b (mod(n))",
-                    style: CustomStyle.bodyLargeText,
-                  ),
-
-                ],
-              )
-            ),
-
-            SizedBox(width: 120),
-
-            Expanded(
-              child: AlphabetEditor(
-                title: "Instance alphabet",
-                alphabet: widget.alphabet,
-                defaultAlphabet: widget.defaultAlphabet,
-                setAlphabet: setAlphabet,
-                showResetButton: true,
-              )
-            ),
-          ],
+              // Right Column.
+              Expanded(
+                child: AlphabetEditor(
+                  title: "Instance alphabet",
+                  alphabet: widget.alphabet,
+                  defaultAlphabet: widget.defaultAlphabet,
+                  setAlphabet: setAlphabet,
+                  showResetButton: true,
+                )
+              ),
+            ],
+          ),
         ),
 
         widget.mode == 'break' ? getBreakSection() : Container(),
@@ -242,8 +254,8 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
 
     return Column(
       children: [
-        SizedBox(height: 10),
-        Divider(height: 30),
+        const SizedBox(height: 10),
+        const Divider(height: 30),
 
         SizedBox(
           height: 300,
@@ -256,7 +268,7 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
               ),
 
               //SizedBox(width: 20),
-              VerticalDivider(width: 40),
+              const VerticalDivider(width: 40, thickness: 2),
 
               breakMethod!.build(),
             ],
@@ -276,7 +288,7 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
               onChanged: onKnownPairChange,
             ),
 
-            Divider(height: 30,),
+            const Divider(height: 30,),
 
             // Key calculated from input.
             GestureDetector(

@@ -19,9 +19,11 @@ Cryptext substitutionEncrypt(Cryptext input, List<String> cycleK) {
     output.add(tabOutput[tabInput.indexOf(inputOnlyValid[i])]);
   }
 
-  return Cryptext(letters: output);
+  return Cryptext(letters: output, alphabet: input.alphabet);
 }
 
+/// Decrypts the input that was encrypted with the given permutation. cycleK is
+/// the key from encryption that is a permutation in cycle notation.
 Cryptext substitutionDecrypt(Cryptext input, List<String> cycleK) {
   if (!permutationIsWholeAlphabet(cycleK, input.alphabet)) {
     throw Exception("GivenPermutationIsNotValidForAlphabet");
@@ -63,7 +65,7 @@ List<String> cycleNotationFromTabular(List<String> input, List<String> output) {
 List<String> cycleNotationInverse(List<String> cycles) {
   return cycles.where((cycle) => cycle.length > 1).map((cycle) {
     return cycle[0] + cycle.substring(1, cycle.length).split("").reversed.join();
-  }).toList();
+  }).toList() + cycles.where((cycle) => cycle.length == 1).toList();
 }
 
 /// Converts a permutation in cycle notation to the tabular notation. Takes the
@@ -85,12 +87,70 @@ bool permutationIsWholeAlphabet(List<String> cyclePerm, Alphabet alphabet) {
   if (alphabet.length != cyclePerm.join().length) {
     return false;
   }
+  return permutationIsInAlphabet(cyclePerm, alphabet);
+}
+
+/// If permutation is completely contained within the alphabet.
+bool permutationIsInAlphabet(List<String> cyclePerm, Alphabet alphabet) {
   for (String char in cyclePerm.join().split('')) {
     if (!alphabet.letters.contains(char)) {
       return false;
     }
   }
   return true;
+}
+
+/// Returns true if all characters in the permutation are unique (no repeats).
+bool permutationIsUnique(List<String> cyclePerm) {
+  List<String> chars = cyclePerm.join().split('');
+  return chars.length == chars.toSet().length;
+}
+
+
+List<String> parseCycleNotation(String raw, {String startDelimeter = "(", String endDelimeter = ")", bool alphabetContainsSpace = false}) {
+  // Build raw string for regex.
+  String pattern = r'';
+  pattern += '\\$startDelimeter.+?\\$endDelimeter';
+  pattern += alphabetContainsSpace ? "" : "| +?[^ \\$startDelimeter\\$endDelimeter]+? +?";
+  RegExp cycleMatcher = RegExp(pattern);
+  raw = ' $raw ';
+
+  // Matches all cases of delimeters or surrounding some stuff.
+  List<String> cycles = cycleMatcher.allMatches(raw).map((e) => e.group(0)!).toList();
+  // Remove all delimeter characters.
+  RegExp delimeterMatcher = RegExp(r'\)* *\(*');
+  cycles = cycles.map((cycle) => cycle = cycle.replaceAll(delimeterMatcher, "")).toList();
+  // Remove all blank matches (had opening and closing delimeter and no content.
+  cycles.removeWhere((element) => element == "");
+  return cycles;
+}
+
+String buildPermutationVisual(List<String> cyclePerm, Alphabet alphabet) {
+  if (!permutationIsWholeAlphabet(cyclePerm, alphabet)) {
+    throw Exception("BuildVisualOfIncompleteAlphabet");
+  }
+
+  var tab = tabularNotationFromCycle(cyclePerm);
+  tab = tabularNotationAlphabetical(tab, alphabet);
+
+  String inputLine = tab.item1.map((char) => "$char ").join();
+  String outputLine = tab.item2.map((char) => "$char ").join();
+
+  inputLine = inputLine.substring(0, inputLine.length - 1);
+  outputLine = outputLine.substring(0, outputLine.length - 1);
+
+  return '$inputLine\n$outputLine';
+}
+
+Tuple2<List<String>, List<String>> tabularNotationAlphabetical(Tuple2<List<String>, List<String>> tabPerm, Alphabet alphabet) {
+  List<String> input = [];
+  List<String> output = [];
+  for (int i = 0; i < alphabet.length; i++) {
+    int indexOfI = tabPerm.item1.indexOf(alphabet.letters[i]);
+    input.add(tabPerm.item1[indexOfI]);
+    output.add(tabPerm.item2[indexOfI]);
+  }
+  return Tuple2(input, output);
 }
 
 void main() {
@@ -109,4 +169,11 @@ void main() {
 
   print(c);
   print(p_decrypted);
+
+  print(parseCycleNotation("   (ABCD)    EFG  () ()"));
+
+  //String raw = r'';
+  //raw += "HI";
+  //print(raw);
+  //print(r'\(.+?\)| +?[^ \(\)]+? +?');
 }

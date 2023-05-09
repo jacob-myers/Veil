@@ -32,7 +32,6 @@ class _OffsetEntry extends State<OffsetEntry> {
       title: 'Offset',
       hintText: 'Offset...',
       errorText: error,
-      defaultValue: 0,
       value: widget.offset,
       onChanged: (String str) {
         setState(() {

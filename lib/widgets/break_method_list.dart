@@ -68,7 +68,7 @@ class _BreakMethodList extends State<BreakMethodList> {
                             );
                           },
                           separatorBuilder: (context, index) {
-                            return Divider();
+                            return const Divider();
                           },
                         ),
                       )
@@ -77,7 +77,7 @@ class _BreakMethodList extends State<BreakMethodList> {
                 ),
 
                 //SizedBox(width: 20),
-                VerticalDivider(width: 40),
+                const VerticalDivider(width: 40, thickness: 2),
 
                 // Descriptions.
                 //Spacer(),
@@ -86,8 +86,8 @@ class _BreakMethodList extends State<BreakMethodList> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(widget.selectedMethod.title, style: CustomStyle.headers),
-                      SizedBox(height: 10),
-                      Divider(),
+                      const SizedBox(height: 10),
+                      const Divider(),
 
                       Expanded(
                         child: Text(

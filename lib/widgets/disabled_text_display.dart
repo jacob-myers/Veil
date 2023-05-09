@@ -24,32 +24,30 @@ class DisabledTextDisplay extends StatefulWidget {
 class _DisabledTextDisplay extends State<DisabledTextDisplay> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          widget.title != null ? Text(widget.title!, style: CustomStyle.headers) : Container(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        widget.title != null ? Text(widget.title!, style: CustomStyle.headers) : Container(),
 
-          SizedBox(height: 10),
+        SizedBox(height: 10),
 
-          IntrinsicHeight(
-            child: TextField(
-              style: CustomStyle.disabledTextEntry,
-              controller: TextEditingController(text: widget.content),
-              enabled: false,
+        IntrinsicHeight(
+          child: TextField(
+            style: CustomStyle.disabledTextEntry,
+            controller: TextEditingController(text: widget.content),
+            enabled: false,
 
-              // Styling.
-              cursorColor: CustomStyle.pageScheme.onPrimary,
-              decoration: InputDecoration(
-                disabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: CustomStyle.disabledTextEntryBorderColor, width: 1)
-                ),
+            // Styling.
+            cursorColor: CustomStyle.pageScheme.onPrimary,
+            decoration: InputDecoration(
+              disabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: CustomStyle.disabledTextEntryBorderColor, width: 1)
               ),
             ),
           ),
+        ),
 
-        ],
-      ),
+      ],
     );
   }
 }

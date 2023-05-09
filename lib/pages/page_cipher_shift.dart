@@ -201,57 +201,66 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
 
         Divider(height: 30),
 
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Left Column.
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ShiftAmountEntry(
-                          alphabet: widget.alphabet,
-                          setShift: setShift,
-                          shift: shift
-                      ),
+        IntrinsicHeight(
+          child:Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Left Column.
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ShiftAmountEntry(
+                              alphabet: widget.alphabet,
+                              setShift: setShift,
+                              shift: shift
+                          ),
+                        ),
 
-                      SizedBox(width: 20),
+                        SizedBox(width: 20),
 
-                      DisabledTextDisplay(
-                          title: "Alphabet Space",
-                          content: widget.alphabet.length.toString()
-                      ),
-                    ],
-                  ),
+                        Expanded(
+                          child: DisabledTextDisplay(
+                              title: "Alphabet Space",
+                              content: widget.alphabet.length.toString()
+                          ),
+                        ),
+                      ],
+                    ),
 
-                  SizedBox(height: 10),
+                    SizedBox(height: 10),
 
-                  Text(
-                    "Mathematical Algorithm: C(p) = p + k (mod(n))",
-                    style: CustomStyle.bodyLargeText,
-                  ),
+                    Text(
+                      "Mathematical Algorithm: C(p) = p + k (mod(n))",
+                      style: CustomStyle.bodyLargeText,
+                    ),
 
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            SizedBox(width: 120),
+              VerticalDivider(
+                width: 40,
+                thickness: 2,
+              ),
 
-            // Right Column.
-            // TODO implement functionality.
-            Expanded(
-              child: AlphabetEditor(
-                title: "Instance alphabet",
-                alphabet: widget.alphabet,
-                defaultAlphabet: widget.defaultAlphabet,
-                setAlphabet: setAlphabet,
-                showResetButton: true,
-              )
-            ),
-          ],
+              // Right Column.
+              // TODO implement functionality.
+              Expanded(
+                child: AlphabetEditor(
+                  title: "Instance alphabet",
+                  alphabet: widget.alphabet,
+                  defaultAlphabet: widget.defaultAlphabet,
+                  setAlphabet: setAlphabet,
+                  showResetButton: true,
+                )
+              ),
+            ],
+          ),
         ),
 
         widget.mode == 'break' ? getBreakSection() : Container(),
@@ -281,7 +290,7 @@ class _PageCipherShift extends State<PageCipherShift> implements CipherPageState
               ),
 
               //SizedBox(width: 20),
-              VerticalDivider(width: 40),
+              const VerticalDivider(width: 40, thickness: 2),
 
               breakMethod!.build(),
             ],

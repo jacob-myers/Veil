@@ -5,6 +5,7 @@ import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/cryptext.dart';
 import 'package:veil/pages/page_cipher_affine.dart';
 import 'package:veil/pages/page_cipher_rail_fence.dart';
+import 'package:veil/pages/page_cipher_substitution.dart';
 import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/cipher_selection_button.dart';
 import 'package:veil/pages/page_cipher_shift.dart';
@@ -88,6 +89,12 @@ class _HomePage extends State<HomePage> {
                           text: 'Affine Cipher',
                           targetPage: () => PageCipherAffine(defaultAlphabet: myDefaultAlphabet),
                         ),
+                        Divider(),
+
+                        CipherSelectionButton(
+                          text: 'Substitution Cipher',
+                          targetPage: () => PageCipherSubstitution(defaultAlphabet: myDefaultAlphabet),
+                        ),
 
                       ],
                     ),
@@ -96,7 +103,7 @@ class _HomePage extends State<HomePage> {
               ),
             ),
 
-            VerticalDivider(width: 40),
+            VerticalDivider(width: 40, thickness: 2,),
 
             Expanded(
               //width: contextWidth/3*2,

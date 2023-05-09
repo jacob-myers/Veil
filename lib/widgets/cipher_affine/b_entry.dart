@@ -35,7 +35,6 @@ class _BEntry extends State<BEntry> {
       title: 'Coefficient B',
       hintText: 'Enter B...',
       errorText: error,
-      defaultValue: 0,
       value: widget.b,
       onChanged: (String str) {
         setState(() {

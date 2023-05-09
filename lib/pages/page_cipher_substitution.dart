@@ -1,29 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:veil/functions/cipher_rail_fence.dart';
+import 'package:veil/functions/cipher_substitution.dart';
 
 // Local
 import 'package:veil/pages/cipher_page_state.dart';
 import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/cryptext.dart';
 import 'package:veil/data_structures/break_method.dart';
+import 'package:veil/functions/cipher_shift.dart';
 import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/appbar_cipher_page.dart';
+import 'package:veil/widgets/break_method_list.dart';
 import 'package:veil/widgets/crypt_io/crypt_io.dart';
-import 'package:veil/widgets/cipher_rail_fence/offset_entry.dart';
-import 'package:veil/widgets/cipher_rail_fence/num_rails_entry.dart';
+import 'package:veil/widgets/partial_text_display.dart';
+import 'package:veil/widgets/ciphertext_plaintext_pair_entry.dart';
+import 'package:veil/widgets/cipher_shift/shift_amount_entry.dart';
 import 'package:veil/widgets/disabled_text_display.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
+import 'package:veil/widgets/string_value_entry.dart';
 
-class PageCipherRailFence extends StatefulWidget {
+class PageCipherSubstitution extends StatefulWidget {
   Alphabet defaultAlphabet;
   Alphabet alphabet;
   Cryptext plaintext;
   Cryptext ciphertext;
   String mode;
 
-  PageCipherRailFence({
+  PageCipherSubstitution({
     super.key,
     required this.defaultAlphabet,
     Cryptext? plaintext,
@@ -35,17 +39,19 @@ class PageCipherRailFence extends StatefulWidget {
         ciphertext = ciphertext ?? Cryptext(alphabet: defaultAlphabet);
 
   @override
-  State<PageCipherRailFence> createState() => _PageCipherShift();
+  State<PageCipherSubstitution> createState() => _PageCipherSubstitution();
 }
 
-class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageState {
-  String visual = "";
-  int numRails = 1;
-  int offset = 0;
+class _PageCipherSubstitution extends State<PageCipherSubstitution> implements CipherPageState {
+  late List<String> permutation;
+  String permutationInput = '';
+  String visual = '';
 
   @override
-  void setBreakMethod(BreakMethod method) {
-    // TODO: implement setBreakMethod
+  initState() {
+    super.initState();
+    permutation = widget.alphabet.letters;
+    setPerm(permutationInput);
   }
 
   @override
@@ -53,8 +59,11 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
     setState(() {
       cryptext.alphabet = widget.alphabet;
       widget.plaintext = cryptext;
-      widget.ciphertext = railFenceEncrypt(widget.plaintext, numRails, offset);
-      visual = buildRailMatrixVisual(widget.plaintext, numRails, offset);
+      try {
+        widget.ciphertext = substitutionEncrypt(widget.plaintext, permutation);
+      } catch(e) {
+        widget.ciphertext = Cryptext(letters: widget.plaintext.lettersInAlphabet);
+      }
     });
   }
 
@@ -63,9 +72,17 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
     setState(() {
       cryptext.alphabet = widget.alphabet;
       widget.ciphertext = cryptext;
-      widget.plaintext = railFenceDecrypt(widget.ciphertext, numRails, offset);
-      visual = buildRailMatrixVisual(widget.plaintext, numRails, offset);
+      try {
+        widget.plaintext = substitutionDecrypt(widget.ciphertext, permutation);
+      } catch(e) {
+        widget.plaintext = Cryptext(letters: widget.ciphertext.lettersInAlphabet);
+      }
     });
+  }
+
+  @override
+  void setBreakMethod(BreakMethod method) {
+    // TODO: implement setBreakMethod
   }
 
   @override
@@ -78,18 +95,25 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
   void setAlphabet (Alphabet newAlphabet) {
     setState(() {
       widget.alphabet = newAlphabet;
+      setPerm(permutationInput);
     });
   }
 
-  void setNumRails (int rails) {
+  void setPerm(String raw) {
     setState(() {
-      numRails = rails;
-    });
-  }
-
-  void setOffset (int offset) {
-    setState(() {
-      this.offset = offset;
+      // TODO if permutation is within alphabet
+      List<String> newPerm = parseCycleNotation(raw);
+      List<String> permChars = newPerm.join().split('');
+      if (permutationIsInAlphabet(newPerm, widget.alphabet) && permutationIsUnique(newPerm)) {
+        for (String char in widget.alphabet.letters) {
+          if (!permChars.contains(char)) {
+            newPerm.add(char);
+          }
+        }
+        permutation = newPerm;
+        visual = buildPermutationVisual(permutation, widget.alphabet);
+      }
+      permutationInput = raw;
     });
   }
 
@@ -112,7 +136,7 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
 
     return Scaffold(
         appBar: AppbarCipherPage(
-          title: 'Rail Fence Cipher',
+          title: 'Substitution Cipher',
           mode: widget.mode,
           onModeButtonPress: onModeButtonPress,
         ),
@@ -151,46 +175,24 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: NumRailsEntry(
-                            alphabet: widget.alphabet,
-                            setNumRails: setNumRails,
-                            numRails: numRails,
-                          ),
-                        ),
 
-                        SizedBox(width: 20),
-
-                        Expanded(
-                          child: OffsetEntry(
-                            alphabet: widget.alphabet,
-                            setOffset: setOffset,
-                            offset: offset,
-                          ),
-                        ),
-
-                        SizedBox(width: 20),
-
-                        Expanded(
-                          child: DisabledTextDisplay(
-                              title: "Offset Space",
-                              content: getOffsetSpace(numRails).toString()
-                          ),
-                        ),
-                      ],
+                    IntrinsicHeight(
+                      child: StringValueEntry(
+                        title: 'Key (Permutation in cycle notation)',
+                        value: permutationInput,
+                        onChanged: setPerm,
+                        showResetButton: true,
+                      ),
                     ),
+
                     SizedBox(height: 10),
 
-                    Text("Layout Visual", style: CustomStyle.headers),
+                    Text("Tabular Notation", style: CustomStyle.headers),
                     SizedBox(height: 10),
 
                     Scrollbar(
                       controller: controller,
                       isAlwaysShown: true,
-                      scrollbarOrientation: ScrollbarOrientation.bottom,
                       child: SingleChildScrollView(
                         controller: controller,
                         scrollDirection: Axis.horizontal,
@@ -203,7 +205,7 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
                                   visual,
                                   style: CustomStyle.bodyLargeTextMono,
                                 ),
-                                SizedBox(height: 15),
+                                SizedBox(height: 10),
                               ],
                             )
                           ],
@@ -231,9 +233,7 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
               ),
             ],
           ),
-        ),
-
-        //widget.mode == 'break' ? getBreakSection() : Container(),
+        )
 
       ],
     );
