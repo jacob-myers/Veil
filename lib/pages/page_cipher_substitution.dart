@@ -15,10 +15,11 @@ import 'package:veil/widgets/partial_text_display.dart';
 import 'package:veil/widgets/ciphertext_plaintext_pair_entry.dart';
 import 'package:veil/widgets/cipher_shift/shift_amount_entry.dart';
 import 'package:veil/widgets/disabled_text_display.dart';
+import 'package:veil/widgets/cipher_substitution/permutation_entry.dart';
+import 'package:veil/widgets/string_value_entry.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
-import 'package:veil/widgets/string_value_entry.dart';
 
 class PageCipherSubstitution extends StatefulWidget {
   Alphabet defaultAlphabet;
@@ -51,7 +52,7 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> implements C
   initState() {
     super.initState();
     permutation = widget.alphabet.letters;
-    setPerm(permutationInput);
+    setPerm(permutation, permutationInput);
   }
 
   @override
@@ -95,25 +96,15 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> implements C
   void setAlphabet (Alphabet newAlphabet) {
     setState(() {
       widget.alphabet = newAlphabet;
-      setPerm(permutationInput);
+      setPerm(permutation, permutationInput);
     });
   }
 
-  void setPerm(String raw) {
+  void setPerm(List<String> perm, String raw) {
     setState(() {
-      // TODO if permutation is within alphabet
-      List<String> newPerm = parseCycleNotation(raw);
-      List<String> permChars = newPerm.join().split('');
-      if (permutationIsInAlphabet(newPerm, widget.alphabet) && permutationIsUnique(newPerm)) {
-        for (String char in widget.alphabet.letters) {
-          if (!permChars.contains(char)) {
-            newPerm.add(char);
-          }
-        }
-        permutation = newPerm;
-        visual = buildPermutationVisual(permutation, widget.alphabet);
-      }
+      permutation = perm;
       permutationInput = raw;
+      visual = buildPermutationVisual(permutation, widget.alphabet);
     });
   }
 
@@ -177,13 +168,12 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> implements C
                   children: [
 
                     IntrinsicHeight(
-                      child: StringValueEntry(
-                        title: 'Key (Permutation in cycle notation)',
-                        hintText: 'Enter permutation...',
-                        value: permutationInput,
-                        onChanged: setPerm,
-                        showResetButton: true,
-                      ),
+                      child: PermutationEntry(
+                        alphabet: widget.alphabet,
+                        setPerm: setPerm,
+                        perm: permutation,
+                        rawText: permutationInput,
+                      )
                     ),
 
                     SizedBox(height: 10),

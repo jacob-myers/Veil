@@ -59,6 +59,7 @@ class _StringValueEntry extends State<StringValueEntry> {
 
         Focus(
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Flexible(
                 child: TextField(

@@ -125,6 +125,18 @@ List<String> parseCycleNotation(String raw, {String startDelimeter = "(", String
   return cycles;
 }
 
+/// Fills remaining cycles (the ones that go to themselves).
+List<String> getSingleLengthCycles(List<String> cycles, Alphabet alphabet) {
+  List<String> permChars = cycles.join().split('');
+  List<String> remainingSingleLengthCycles = [];
+  for (String char in alphabet.letters) {
+    if (!permChars.contains(char)) {
+      remainingSingleLengthCycles.add(char);
+    }
+  }
+  return remainingSingleLengthCycles;
+}
+
 String buildPermutationVisual(List<String> cyclePerm, Alphabet alphabet) {
   if (!permutationIsWholeAlphabet(cyclePerm, alphabet)) {
     throw Exception("BuildVisualOfIncompleteAlphabet");
