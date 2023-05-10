@@ -179,6 +179,7 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> implements C
                     IntrinsicHeight(
                       child: StringValueEntry(
                         title: 'Key (Permutation in cycle notation)',
+                        hintText: 'Enter permutation...',
                         value: permutationInput,
                         onChanged: setPerm,
                         showResetButton: true,
