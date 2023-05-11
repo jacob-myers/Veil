@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Local
 import 'package:veil/data_structures/alphabet.dart';
@@ -12,6 +13,7 @@ import 'package:veil/pages/page_cipher_shift.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
+import 'package:veil/widgets/my_text_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -120,6 +122,22 @@ class _HomePage extends State<HomePage> {
                     setAlphabet: setAlphabet,
                     showDefaultButtons: true,
                   ),
+                  Divider(height: 25, thickness: 2),
+
+                  // Open's link to repo; https://github.com/jacob-myers/Veil
+                  MyTextButton(
+                    text: "Open Github Code",
+                    width: 190,
+                    onTap: () async {
+                      var url = Uri.parse("https://github.com/jacob-myers/Veil");
+
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    }
+                  )
 
                 ],
               ),
