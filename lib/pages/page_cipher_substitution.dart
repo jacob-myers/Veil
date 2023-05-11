@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:veil/functions/cipher_substitution.dart';
-import 'package:veil/functions/digram.dart';
-import 'package:veil/functions/frequency.dart';
 
 // Local
 import 'package:veil/pages/cipher_page_state.dart';
 import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/cryptext.dart';
 import 'package:veil/data_structures/break_method.dart';
-import 'package:veil/functions/cipher_shift.dart';
+import 'package:veil/pages/page_digram_table.dart';
 import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/appbar_cipher_page.dart';
 import 'package:veil/widgets/break_method_list.dart';
 import 'package:veil/widgets/crypt_io/crypt_io.dart';
 import 'package:veil/widgets/my_text_button.dart';
-import 'package:veil/widgets/partial_text_display.dart';
-import 'package:veil/widgets/ciphertext_plaintext_pair_entry.dart';
-import 'package:veil/widgets/cipher_shift/shift_amount_entry.dart';
-import 'package:veil/widgets/disabled_text_display.dart';
 import 'package:veil/widgets/cipher_substitution/permutation_entry.dart';
-import 'package:veil/widgets/string_value_entry.dart';
 import 'package:veil/widgets/my_horizontal_scrollable.dart';
-import 'package:veil/widgets/cipher_substitution/digram_table_size_entry.dart';
+import 'package:veil/functions/cipher_substitution.dart';
+import 'package:veil/functions/digram.dart';
+import 'package:veil/functions/frequency.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
@@ -320,7 +314,15 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> implements C
               MyTextButton(
                 text: 'Large View',
                 onTap: () {
-                  // TODO Page where a full digram table can be viewed.
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => PageDigramTable(text: widget.ciphertext),
+                      transitionDuration: Duration(milliseconds: 100),
+                      reverseTransitionDuration: Duration(milliseconds: 100),
+                      transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                    )
+                  );
                 }
               ),
               SizedBox(height: 10),
@@ -404,15 +406,55 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> implements C
 
         SizedBox(
           width: 100,
-          child: ListView.builder(
-              itemCount: widget.alphabet.length,
-              itemBuilder: (BuildContext context, int i) {
-                return Text(
-                  "${freqSorted[i].key} ${freqSorted[i].value.toString().padLeft(mostDigits)}",
-                  style: CustomStyle.bodyLargeTextMono,
-                );
-              }
-          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Count',
+                style: CustomStyle.headers,
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: widget.alphabet.length,
+                    itemBuilder: (BuildContext context, int i) {
+                      return Text(
+                        "${freqSorted[i].key} ${freqSorted[i].value.toString().padLeft(mostDigits)}",
+                        style: CustomStyle.bodyLargeTextMono,
+                      );
+                    }
+                ),
+              ),
+            ],
+          )
+        ),
+
+        SizedBox(width: 10),
+
+        SizedBox(
+          width: 100,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Percentage',
+                style: CustomStyle.headers,
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: widget.alphabet.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    double divisor = widget.ciphertext.length == 0 ? 1 : widget.ciphertext.length.toDouble();
+                    return Text(
+                      "${freqSorted[i].key} ${(freqSorted[i].value/divisor*100).toString().padLeft(mostDigits)}",
+                      style: CustomStyle.bodyLargeTextMono,
+                    );
+                  }
+                ),
+              ),
+            ],
+          )
         ),
 
         Spacer()

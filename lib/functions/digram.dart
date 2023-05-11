@@ -44,7 +44,12 @@ String digramTable(Cryptext cryptext, List<String> characters, {bool showLabels 
     table.insert(0, [' ', ...characters.map((char) => " ${char.padLeft(mostDigits)}")]);
   }
 
-  return table.map((line) => '${line.join()}\n').join();
+  // Combine lines into one string.
+  String tableStr = table.map((line) => '${line.join()}\n').join();
+  // Strip the last newline.
+  tableStr = tableStr.substring(0, tableStr.length - 1);
+
+  return tableStr;
 }
 
 Map<String, int> digramCounts (Cryptext cryptext) {

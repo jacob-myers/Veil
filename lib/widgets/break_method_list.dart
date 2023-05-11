@@ -90,10 +90,13 @@ class _BreakMethodList extends State<BreakMethodList> {
                       const Divider(),
 
                       Expanded(
-                        child: Text(
-                          widget.selectedMethod.description,
-                          style: CustomStyle.content,
-                        ),
+                        child: SingleChildScrollView(
+                          child: Text(
+                            widget.selectedMethod.description,
+                            style: CustomStyle.content,
+                            textAlign: TextAlign.justify,
+                          ),
+                        )
                       )
                     ],
                   ),
