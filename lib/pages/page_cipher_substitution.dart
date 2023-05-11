@@ -436,7 +436,7 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> implements C
               SizedBox(width: 10),
 
               SizedBox(
-                  width: 100,
+                  width: 110,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
