@@ -404,60 +404,69 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> implements C
 
         SizedBox(width: 20),
 
-        SizedBox(
-          width: 100,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        SingleChildScrollView(
+          child: Row(
             children: [
-              Text(
-                'Count',
-                style: CustomStyle.headers,
+              SizedBox(
+                  width: 100,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Count',
+                        style: CustomStyle.headers,
+                      ),
+                      SizedBox(height: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(
+                          widget.alphabet.length,
+                              (i) {
+                            return Text(
+                              "${freqSorted[i].key} ${freqSorted[i].value.toString().padLeft(mostDigits)}",
+                              style: CustomStyle.bodyLargeTextMono,
+                            );
+                          }
+                        ),
+                      ),
+                    ],
+                  )
               ),
-              SizedBox(height: 10),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: widget.alphabet.length,
-                    itemBuilder: (BuildContext context, int i) {
-                      return Text(
-                        "${freqSorted[i].key} ${freqSorted[i].value.toString().padLeft(mostDigits)}",
-                        style: CustomStyle.bodyLargeTextMono,
-                      );
-                    }
-                ),
+
+              SizedBox(width: 10),
+
+              SizedBox(
+                  width: 100,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Percentage',
+                        style: CustomStyle.headers,
+                      ),
+                      SizedBox(height: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(
+                          widget.alphabet.length,
+                              (i) {
+                            double divisor = widget.ciphertext.length == 0 ? 1 : widget.ciphertext.length.toDouble();
+                            return Text(
+                              "${freqSorted[i].key} ${(freqSorted[i].value/divisor*100).toStringAsFixed(2).padLeft(mostDigits)}",
+                              style: CustomStyle.bodyLargeTextMono,
+                            );
+                          }
+                        ),
+                      ),
+                    ],
+                  )
               ),
+
+              SizedBox(width: 20),
+
             ],
-          )
-        ),
-
-        SizedBox(width: 10),
-
-        SizedBox(
-          width: 100,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Percentage',
-                style: CustomStyle.headers,
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: widget.alphabet.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    double divisor = widget.ciphertext.length == 0 ? 1 : widget.ciphertext.length.toDouble();
-                    return Text(
-                      "${freqSorted[i].key} ${(freqSorted[i].value/divisor*100).toString().padLeft(mostDigits)}",
-                      style: CustomStyle.bodyLargeTextMono,
-                    );
-                  }
-                ),
-              ),
-            ],
-          )
-        ),
-
-        Spacer()
+          ),
+        )
       ],
     );
   }
