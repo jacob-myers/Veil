@@ -1,7 +1,7 @@
 
 # Veil
 
-An application for encrypting, decrypting, and cracking ciphers. A web build can be accessed and used at this domain: [https://crypto-veil.web.app]
+An application for encrypting, decrypting, and cracking ciphers. A web build can be accessed and used at this domain: https://crypto-veil.web.app
 
 ## Contributors
 
