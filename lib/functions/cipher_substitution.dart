@@ -113,15 +113,23 @@ List<String> parseCycleNotation(String raw, {String startDelimeter = "(", String
   // Build raw string for regex.
   String pattern = r'';
   pattern += '\\$startDelimeter.+?\\$endDelimeter';
-  pattern += alphabetContainsSpace ? "" : "| +?[^ \\$startDelimeter\\$endDelimeter]+? +?";
+  pattern += alphabetContainsSpace ? "" : "| *?[^ \\$startDelimeter\\$endDelimeter]+? +?";
   RegExp cycleMatcher = RegExp(pattern);
+  print(pattern);
   raw = ' $raw ';
 
   // Matches all cases of delimeters or surrounding some stuff.
+  print(raw);
   List<String> cycles = cycleMatcher.allMatches(raw).map((e) => e.group(0)!).toList();
   // Remove all delimeter characters.
   RegExp delimeterMatcher = RegExp(r'\)* *\(*');
+  for (String c in cycles) {
+    print('|$c|');
+  }
   cycles = cycles.map((cycle) => cycle = cycle.replaceAll(delimeterMatcher, "")).toList();
+  for (String c in cycles) {
+    print('|$c|');
+  }
   // Remove all blank matches (had opening and closing delimeter and no content.
   cycles.removeWhere((element) => element == "");
   return cycles;
