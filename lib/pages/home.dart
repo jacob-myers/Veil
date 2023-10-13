@@ -7,6 +7,7 @@ import 'package:veil/data_structures/cryptext.dart';
 import 'package:veil/pages/page_cipher_affine.dart';
 import 'package:veil/pages/page_cipher_rail_fence.dart';
 import 'package:veil/pages/page_cipher_substitution.dart';
+import 'package:veil/pages/page_cipher_viginere.dart';
 import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/cipher_selection_button.dart';
 import 'package:veil/pages/page_cipher_shift.dart';
@@ -96,6 +97,12 @@ class _HomePage extends State<HomePage> {
                         CipherSelectionButton(
                           text: 'Substitution Cipher',
                           targetPage: () => PageCipherSubstitution(defaultAlphabet: myDefaultAlphabet),
+                        ),
+                        Divider(),
+
+                        CipherSelectionButton(
+                          text: 'Viginere Cipher',
+                          targetPage: () => PageCipherViginere(defaultAlphabet: myDefaultAlphabet),
                         ),
 
                       ],
