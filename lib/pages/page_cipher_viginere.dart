@@ -166,6 +166,7 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
+              /*
               Expanded(
                 child: Row(
                   children: [
@@ -181,6 +182,15 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
                     Spacer(),
 
                   ],
+                ),
+              ),
+              */
+
+              Expanded(
+                child: KeywordEntry(
+                  keyword: keyword,
+                  alphabet: widget.alphabet,
+                  setKeyword: setKeyword,
                 ),
               ),
 
