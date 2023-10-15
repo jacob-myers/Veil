@@ -6,46 +6,41 @@ import 'package:veil/pages/cipher_page_state.dart';
 import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/cryptext.dart';
 import 'package:veil/data_structures/break_method.dart';
-import 'package:veil/functions/cipher_affine.dart';
-import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/appbar_cipher_page.dart';
 import 'package:veil/widgets/crypt_io/crypt_io.dart';
-import 'package:veil/widgets/cipher_affine/a_entry.dart';
-import 'package:veil/widgets/cipher_affine/b_entry.dart';
 import 'package:veil/widgets/break_method_list.dart';
-import 'package:veil/widgets/ciphertext_plaintext_pair_entry.dart';
-import 'package:veil/widgets/disabled_text_display.dart';
+import 'package:veil/functions/cipher_viginere.dart';
+import 'package:veil/widgets/keyword_entry.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
 
-class PageCipherAffine extends StatefulWidget {
+import '../widgets/alphabet_editor.dart';
+
+class PageCipherViginere extends StatefulWidget {
   Alphabet defaultAlphabet;
   Alphabet alphabet;
   Cryptext plaintext;
   Cryptext ciphertext;
   String mode;
 
-  PageCipherAffine({
+  PageCipherViginere({
     super.key,
     required this.defaultAlphabet,
     Cryptext? plaintext,
     Cryptext? ciphertext,
     this.mode = 'encrypt',
   })
-  : alphabet = defaultAlphabet,
-    plaintext = plaintext ?? Cryptext(alphabet: defaultAlphabet),
-    ciphertext = ciphertext ?? Cryptext(alphabet: defaultAlphabet);
+      : alphabet = defaultAlphabet,
+        plaintext = plaintext ?? Cryptext(alphabet: defaultAlphabet),
+        ciphertext = ciphertext ?? Cryptext(alphabet: defaultAlphabet);
 
   @override
-  State<PageCipherAffine> createState() => _PageCipherAffine();
+  State<PageCipherViginere> createState() => _PageCipherViginere();
 }
 
-class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageState {
-  int a = 1;
-  int b = 0;
-  int breakA = 1;
-  int breakB = 0;
+class _PageCipherViginere extends State<PageCipherViginere> implements CipherPageState {
+  Cryptext keyword = Cryptext();
   BreakMethod? breakMethod;
   List<BreakMethod> breakMethods = [];
   bool breakError = false;
@@ -58,14 +53,7 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
 
   void _initBreakMethods() {
     /// Initialize the cipher breaking methods.
-    breakMethods = [
-      BreakMethod(
-        tag: 'known_plaintext',
-        title: 'Known Plaintext',
-        description: "Known plaintext is when the plaintext of some corresponding ciphertext is known. For an affine cipher, at least 2 pairs have to be known, and have to be a distance apart in the alphabet space(n) that is relatively prime with the alphabet space(n).",
-        build: knownPlaintextContent
-      ),
-    ];
+    breakMethods = [];
     try {
       breakMethod = breakMethods[0];
     } on RangeError {
@@ -79,7 +67,8 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
       cryptext.alphabet = widget.alphabet;
       widget.plaintext = cryptext;
       try {
-        widget.ciphertext = affineEncrypt(widget.plaintext, a, b);
+        widget.ciphertext = viginereEncrypt(widget.plaintext, keyword);
+        //widget.ciphertext = affineEncrypt(widget.plaintext, a, b);
       } catch(e) {
         widget.ciphertext = Cryptext(letters: widget.plaintext.lettersInAlphabet);
       }
@@ -92,7 +81,8 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
       cryptext.alphabet = widget.alphabet;
       widget.ciphertext = cryptext;
       try {
-        widget.plaintext = affineDecrypt(widget.ciphertext, a, b);
+        widget.plaintext = viginereDecrypt(widget.ciphertext, keyword);
+        //widget.plaintext = affineDecrypt(widget.ciphertext, a, b);
       } catch (e) {
         widget.plaintext = Cryptext(letters: widget.ciphertext.lettersInAlphabet);
       }
@@ -117,17 +107,12 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
     });
   }
 
-  void setA(int a) {
+  void setKeyword([Cryptext? keyword]) {
     setState(() {
-      this.a = a;
+      this.keyword = keyword ?? this.keyword;
     });
   }
 
-  void setB(int b) {
-    setState(() {
-      this.b = b;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +133,7 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
 
     return Scaffold(
         appBar: AppbarCipherPage(
-          title: 'Affine Cipher',
+          title: 'Viginere Cipher',
           mode: widget.mode,
           onModeButtonPress: onModeButtonPress,
         ),
@@ -180,49 +165,33 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
+              /*
               Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: AEntry(
-                              alphabet: widget.alphabet,
-                              setA: setA,
-                              a: a,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: BEntry(
-                              alphabet: widget.alphabet,
-                              setB: setB,
-                              b: b,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-
-                          SizedBox(
-                            width: 140,
-                            child: DisabledTextDisplay(
-                                title: "Alphabet Space",
-                                content: widget.alphabet.length.toString()
-                            ),
-                          ),
-                        ],
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: KeywordEntry(
+                        keyword: keyword,
+                        alphabet: widget.alphabet,
+                        setKeyword: setKeyword,
                       ),
+                    ),
 
-                      const SizedBox(height: 10),
+                    // TODO SPACE TO THE RIGHT OF KEYWORD ENTRY.
+                    Spacer(),
 
-                      Text(
-                        "Mathematical Algorithm: C(p) = ap + b (mod(n))",
-                        style: CustomStyle.bodyLargeText,
-                      ),
+                  ],
+                ),
+              ),
+              */
 
-                    ],
-                  )
+              Expanded(
+                child: KeywordEntry(
+                  keyword: keyword,
+                  alphabet: widget.alphabet,
+                  setKeyword: setKeyword,
+                ),
               ),
 
               const VerticalDivider(
@@ -240,6 +209,7 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
                   showResetButton: true,
                 )
               ),
+
             ],
           ),
         ),
@@ -280,74 +250,4 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
     );
   }
 
-  Widget knownPlaintextContent() {
-    return Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CiphertextPlaintextPairEntry(
-              alphabet: widget.alphabet,
-              onChanged: onKnownPairChange,
-            ),
-
-            const Divider(height: 30,),
-
-            // Key calculated from input.
-            GestureDetector(
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: Text(
-                  breakError ? "Invalid input." : 'a = $breakA      b = $breakB',
-                  style: CustomStyle.headers,
-                ),
-              ),
-              onTap: () {
-                setState(() {
-                  setA(breakA);
-                  setB(breakB);
-                });
-              },
-            ),
-          ],
-        )
-    );
-  }
-
-  void onKnownPairChange(Cryptext p, Cryptext c) {
-    setState(() {
-      if (isValidAffinePair(p, c)) {
-        breakError = false;
-        if (isValidAffinePair(p, c)) {
-          Tuple2 ab = findAB(p, c);
-          breakA = ab.item1;
-          breakB = ab.item2;
-        }
-      } else {
-        breakError = true;
-        breakA = 1;
-        breakB = 0;
-      }
-    });
-  }
-
-  bool isValidAffinePair(Cryptext p, Cryptext c) {
-    if (p.length == 0 || c.length == 0) {
-      return false;
-    }
-    if (p.length != c.length) {
-      return false;
-    }
-    if (!p.isExclusiveToAlphabet || !c.isExclusiveToAlphabet) {
-      return false;
-    }
-
-    try {
-      var ab = findAB(p, c);
-      var a = ab.item1;
-      var b = ab.item2;
-      return c == affineEncrypt(p, a, b);
-    } catch(e) {
-      return false;
-    }
-  }
 }

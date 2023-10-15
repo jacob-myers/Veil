@@ -71,6 +71,7 @@ class Alphabet {
     return letters.length;
   }
 
+  /// Mods the int value to put it in the alphabet's space
   int mod(int c) {
     return c % length;
   }
