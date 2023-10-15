@@ -11,7 +11,7 @@ Jacob Myers.
 Veil is an application for encrypting, decrypting, and cracking ciphers. The list of implemented ciphers and how they work can be found below. They currently do not extend to modern, bit-based ciphers. They are alphabet based ciphers.
 
 ### Features
- - Various ciphers with the ability encrypt and decrypt.
+ - Various ciphers with the ability to encrypt and decrypt.
 	 - A master list on the home page can navigate to each implemented cipher. The keys and applicable settings for each cipher can be customized/tuned.
  - Robust Input Editor.
 	 - An input editor is located at the top of each cipher page. The left hand side is editable. Depending on the mode the user is in (Encrypt/Decrypt/Break) this may be the ciphertext or plaintext. The opposing text display is updated quickly in real time as the user edits the input. For example, if the user is in Encrypt mode, they are editing plaintext, and the ciphertext is being updated from their plaintext.
