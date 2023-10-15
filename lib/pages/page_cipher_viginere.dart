@@ -10,9 +10,12 @@ import 'package:veil/widgets/appbar_cipher_page.dart';
 import 'package:veil/widgets/crypt_io/crypt_io.dart';
 import 'package:veil/widgets/break_method_list.dart';
 import 'package:veil/functions/cipher_viginere.dart';
+import 'package:veil/widgets/keyword_entry.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
+
+import '../widgets/alphabet_editor.dart';
 
 class PageCipherViginere extends StatefulWidget {
   Alphabet defaultAlphabet;
@@ -37,7 +40,7 @@ class PageCipherViginere extends StatefulWidget {
 }
 
 class _PageCipherViginere extends State<PageCipherViginere> implements CipherPageState {
-  Cryptext keyWord = Cryptext();
+  Cryptext keyword = Cryptext();
   BreakMethod? breakMethod;
   List<BreakMethod> breakMethods = [];
   bool breakError = false;
@@ -64,6 +67,7 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
       cryptext.alphabet = widget.alphabet;
       widget.plaintext = cryptext;
       try {
+        widget.ciphertext = viginereEncrypt(widget.plaintext, keyword);
         //widget.ciphertext = affineEncrypt(widget.plaintext, a, b);
       } catch(e) {
         widget.ciphertext = Cryptext(letters: widget.plaintext.lettersInAlphabet);
@@ -77,6 +81,7 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
       cryptext.alphabet = widget.alphabet;
       widget.ciphertext = cryptext;
       try {
+        widget.plaintext = viginereDecrypt(widget.ciphertext, keyword);
         //widget.plaintext = affineDecrypt(widget.ciphertext, a, b);
       } catch (e) {
         widget.plaintext = Cryptext(letters: widget.ciphertext.lettersInAlphabet);
@@ -102,17 +107,12 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
     });
   }
 
-  void setA(int a) {
+  void setKeyword([Cryptext? keyword]) {
     setState(() {
-      //this.a = a;
+      this.keyword = keyword ?? this.keyword;
     });
   }
 
-  void setB(int b) {
-    setState(() {
-      //this.b = b;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,6 +160,49 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
         ),
 
         Divider(height: 30),
+
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: KeywordEntry(
+                        keyword: keyword,
+                        alphabet: widget.alphabet,
+                        setKeyword: setKeyword,
+                      ),
+                    ),
+
+                    // TODO SPACE TO THE RIGHT OF KEYWORD ENTRY.
+                    Spacer(),
+
+                  ],
+                ),
+              ),
+
+              const VerticalDivider(
+                width: 40,
+                thickness: 2,
+              ),
+
+              // Right Column.
+              Expanded(
+                child: AlphabetEditor(
+                  title: "Instance alphabet",
+                  alphabet: widget.alphabet,
+                  defaultAlphabet: widget.defaultAlphabet,
+                  setAlphabet: setAlphabet,
+                  showResetButton: true,
+                )
+              ),
+
+            ],
+          ),
+        ),
 
         widget.mode == 'break' ? getBreakSection() : Container(),
       ],
