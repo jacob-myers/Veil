@@ -83,26 +83,26 @@ class _HomePage extends State<HomePage> {
                         Divider(),
 
                         CipherSelectionButton(
-                          text: 'Rail Fence Cipher',
-                          targetPage: () => PageCipherRailFence(defaultAlphabet: myDefaultAlphabet),
-                        ),
-                        Divider(),
-
-                        CipherSelectionButton(
                           text: 'Affine Cipher',
                           targetPage: () => PageCipherAffine(defaultAlphabet: myDefaultAlphabet),
                         ),
                         Divider(),
 
                         CipherSelectionButton(
-                          text: 'Substitution Cipher',
-                          targetPage: () => PageCipherSubstitution(defaultAlphabet: myDefaultAlphabet),
+                          text: 'Viginere Cipher',
+                          targetPage: () => PageCipherViginere(defaultAlphabet: myDefaultAlphabet),
                         ),
                         Divider(),
 
                         CipherSelectionButton(
-                          text: 'Viginere Cipher',
-                          targetPage: () => PageCipherViginere(defaultAlphabet: myDefaultAlphabet),
+                          text: 'Rail Fence Cipher',
+                          targetPage: () => PageCipherRailFence(defaultAlphabet: myDefaultAlphabet),
+                        ),
+                        Divider(),
+
+                        CipherSelectionButton(
+                          text: 'Substitution Cipher',
+                          targetPage: () => PageCipherSubstitution(defaultAlphabet: myDefaultAlphabet),
                         ),
 
                       ],
