@@ -33,11 +33,6 @@ A shift cipher can be represented by the equation: `E(p) = p + k (mod n)`
  - Brute force. A brute force interface is provided.
  - Known Plaintext. A known pair between a piece of ciphertext and plaintext can identify the key (k) used in the original shift. Only one plaintext-ciphertext character pair is needed to crack a shift cipher.
 
-### Rail Fence Cipher
-A rail fence cipher is more visual. The plaintext is laid down in an switch-backing pattern. Like a series of 'V's. It is then read across left to right line by line to obtain the ciphertext. The key consists of the number of rails \(r\) and the offset (o). Both can be chosen by the user. r is capped at 9999. o is not capped, but will be effectively in mod(r * 2 - 2). The equivalent of one full 'V'.
-
-A visual of the 'V' shapes is displayed below the key inputs, and updated in real time as the user types and edits the key values.
-
 ### Affine Cipher
 An affine cipher is a mathematical, alphabet based cipher like the shift cipher. It is an improvement to the limited keyspace of the shift cipher. It adds another variable. Rather than just shifting the plaintext value of each character by k, it multiplies the plaintext value by another variable first. It multiplies the the original character (numerically represented by it's index in the alphabet) by a, then adds b. The result is evaluated in mod n, where n is the length of the alphabet.
 
@@ -48,6 +43,14 @@ However, not all a within mod n will work! A value of a must also be relatively 
 #### Tools
 
  - Known plaintext. Two plaintext-ciphertext character pairs must be known to extract the key (both a and b). However, the plaintext characters must be a distance apart that is relatively prime with n! For example in default English, 'I' and 'F' are represented by 8 and 5 respectively. Making them a distance of 3 apart. This is relatively prime with 26, making it valid. If you knew plaintext 'IF' encrypted to 'PQ', you could extract the key as as a = 17, b = 9.
+
+### Vigenere Cipher
+The Vigenere cipher is similar to a shift cipher, but uses a keyword. To encrypt, each letter of the plaintext is shifted a value corresponding to the next letter of the keyword, looping back to the beginning when the end of the keyword is reached. For example in default English, encrypting 'HELLO' with the keyword 'IF', 'H' would be shifted by 'I' (8), 'E' would be shifted by 'F' (5), 'L' would be shifted by 'I' (8) and so on. So essentially, 'HELLO' would be lined up with 'IFIFI', and each place summed.
+
+### Rail Fence Cipher
+A rail fence cipher is more visual. The plaintext is laid down in an switch-backing pattern. Like a series of 'V's. It is then read across left to right line by line to obtain the ciphertext. The key consists of the number of rails \(r\) and the offset (o). Both can be chosen by the user. r is capped at 9999. o is not capped, but will be effectively in mod(r * 2 - 2). The equivalent of one full 'V'.
+
+A visual of the 'V' shapes is displayed below the key inputs, and updated in real time as the user types and edits the key values.
 
 ### Substitution Cipher
 Another classic cipher, this cipher involves relating each character in the alphabet to another character in the alphabet. This relation must be a one-to-one, onto function, however. Each character can only map to one other character, and each character must be mapped to. This is called a permutation. And can be represented in tabular and cycle notation. The key to a substitution cipher is a permutation of the alphabet. The user inputs this in cycle notation. It is parsed and shown visually below in both tabular and cycle notation. Updated in real time as the user changes it.
