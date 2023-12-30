@@ -2,6 +2,10 @@ import 'package:veil/data_structures/cryptext.dart';
 
 /// Encrypts the input with a Viginere cipher. key is the keyword.
 Cryptext viginereEncrypt(Cryptext input, Cryptext key) {
+  if (key.length == 0) {
+    throw Exception("BlankKeyError");
+  }
+
   // Creating int lists representing the key, plaintext, and ciphertext.
   List<int> intKey = key.numeralized;
   List<int> intVecInitial = input.numeralized;
@@ -20,6 +24,10 @@ Cryptext viginereEncrypt(Cryptext input, Cryptext key) {
 /// Decrypts the input that has been encrypted with a Viginere cipher
 /// with key as the keyword.
 Cryptext viginereDecrypt(Cryptext input, Cryptext key) {
+  if (key.length == 0) {
+    throw Exception("BlankKeyError");
+  }
+
   List<int> intKey = key.numeralized;
   // Inverts the key to a decryption value. For example, in SEUAS:
   // F > 5 > -5 > 21
