@@ -10,6 +10,7 @@ import 'package:veil/widgets/appbar_cipher_page.dart';
 import 'package:veil/widgets/crypt_io/crypt_io.dart';
 import 'package:veil/widgets/break_method_list.dart';
 import 'package:veil/functions/cipher_viginere.dart';
+import 'package:veil/widgets/disabled_text_display.dart';
 import 'package:veil/widgets/keyword_entry.dart';
 
 // Styles
@@ -165,32 +166,22 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-              /*
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: KeywordEntry(
-                        keyword: keyword,
-                        alphabet: widget.alphabet,
-                        setKeyword: setKeyword,
-                      ),
-                    ),
-
-                    // TODO SPACE TO THE RIGHT OF KEYWORD ENTRY.
-                    Spacer(),
-
-                  ],
-                ),
-              ),
-              */
-
+              
               Expanded(
                 child: KeywordEntry(
                   keyword: keyword,
                   alphabet: widget.alphabet,
                   setKeyword: setKeyword,
+                ),
+              ),
+
+              SizedBox(width: 10),
+
+              SizedBox(
+                width: 150,
+                child: DisabledTextDisplay(
+                  content: keyword.length.toString(),
+                  title: "Keyword Length",
                 ),
               ),
 
