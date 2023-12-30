@@ -69,7 +69,6 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
       widget.plaintext = cryptext;
       try {
         widget.ciphertext = viginereEncrypt(widget.plaintext, keyword);
-        //widget.ciphertext = affineEncrypt(widget.plaintext, a, b);
       } catch(e) {
         widget.ciphertext = Cryptext(letters: widget.plaintext.lettersInAlphabet);
       }
@@ -83,7 +82,6 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
       widget.ciphertext = cryptext;
       try {
         widget.plaintext = viginereDecrypt(widget.ciphertext, keyword);
-        //widget.plaintext = affineDecrypt(widget.ciphertext, a, b);
       } catch (e) {
         widget.plaintext = Cryptext(letters: widget.ciphertext.lettersInAlphabet);
       }

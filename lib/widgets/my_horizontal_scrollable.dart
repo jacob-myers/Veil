@@ -25,7 +25,7 @@ class _MyHorizontalScrollable extends State<MyHorizontalScrollable> {
   Widget build(BuildContext context) {
     return Scrollbar(
       controller: controller,
-      isAlwaysShown: true,
+      thumbVisibility: true,
       child: SingleChildScrollView(
           controller: controller,
           scrollDirection: Axis.horizontal,

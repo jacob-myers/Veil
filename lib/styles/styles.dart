@@ -12,8 +12,8 @@ class CustomStyle {
     onSecondary: const Color(0xFFD9D9D9),
     error: Colors.red.shade800,
     onError: Colors.white70,
-    background: Colors.red,
-    onBackground: Colors.white70,
+    background: const Color(0xFF333333),
+    onBackground: Colors.white24,
     surface: Colors.black38,
     onSurface: Colors.white70,
   );
@@ -23,6 +23,7 @@ class CustomStyle {
     foregroundColor: normalBlue,
     backgroundColor: pageScheme.primary,
     elevation: 10,
+    shadowColor: Colors.black
   );
 
   static TextSelectionThemeData pageTextSelectionTheme = TextSelectionThemeData(

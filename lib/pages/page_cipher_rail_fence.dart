@@ -190,7 +190,7 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
 
                     Scrollbar(
                       controller: controller,
-                      isAlwaysShown: true,
+                      thumbVisibility: true,
                       scrollbarOrientation: ScrollbarOrientation.bottom,
                       child: SingleChildScrollView(
                         controller: controller,
