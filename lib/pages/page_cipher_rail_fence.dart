@@ -115,6 +115,7 @@ class _PageCipherShift extends State<PageCipherRailFence> implements CipherPageS
           title: 'Rail Fence Cipher',
           mode: widget.mode,
           onModeButtonPress: onModeButtonPress,
+          disableBreakButton: true,
         ),
 
         body: SingleChildScrollView(

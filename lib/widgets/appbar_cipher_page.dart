@@ -10,12 +10,14 @@ class AppbarCipherPage extends StatefulWidget implements PreferredSizeWidget{
   final Function(String) onModeButtonPress;
   AppBar appBar = AppBar(); // To get size from
   String mode;
+  bool disableBreakButton;
 
   AppbarCipherPage({
     super.key,
     required this.title,
     required this.mode,
     required this.onModeButtonPress,
+    this.disableBreakButton = false,
   });
 
   @override
@@ -48,7 +50,7 @@ class _AppbarCipherPage extends State<AppbarCipherPage> {
         ),
         SizedBox(width: 10),
         IconButton(
-          onPressed: () => widget.onModeButtonPress('break'),
+          onPressed: widget.disableBreakButton ? null : () => widget.onModeButtonPress('break'),
           color: widget.mode == 'break' ? Colors.white : CustomStyle.appBarTheme.foregroundColor,
           icon: Icon( Icons.diamond ),
           tooltip: "Break Tools",

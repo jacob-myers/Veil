@@ -137,6 +137,7 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
           title: 'Viginere Cipher',
           mode: widget.mode,
           onModeButtonPress: onModeButtonPress,
+          disableBreakButton: true,
         ),
 
         body: SingleChildScrollView(
@@ -166,7 +167,7 @@ class _PageCipherViginere extends State<PageCipherViginere> implements CipherPag
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
+
               Expanded(
                 child: KeywordEntry(
                   keyword: keyword,
