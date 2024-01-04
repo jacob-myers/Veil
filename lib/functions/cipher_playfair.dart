@@ -66,7 +66,11 @@ List<String> buildPlaintextPairs(Cryptext plaintext, String padChar, String padC
     throw Exception("PlayfairParametersError: Padding character *2 is not one character: $padCharPadChar.");
   }
 
-  List<String> letters = plaintext.lettersInAlphabet;
+  if (!plaintext.isExclusiveToAlphabet) {
+    throw Exception("PlayfairParametersError: Input includes characters that are not in the provided alphabet.");
+  }
+
+  List<String> letters = plaintext.letters;
   List<String> pairs = [];
 
   while (letters.isNotEmpty) {
@@ -94,20 +98,43 @@ List<String> buildPlaintextPairs(Cryptext plaintext, String padChar, String padC
   return pairs;
 }
 
+String cryptPair(Map<String, Tuple2<int, int>> keyarray, Map<Tuple2<int, int>, String> keyarrayRev,
+    Tuple2<int, int> l1rowcol, Tuple2<int, int> l2rowcol, {bool encrypt = true}) {
+
+  // If encrypting shift right, if decrypting, shift left.
+  int sameRowShift = encrypt ? 1 : -1;
+  // If encrypting, shift down, if decrypting, shift up.
+  int sameColShift = encrypt ? 1 : -1;
+
+  // Same row; Take letters immediately left of each.
+  if (l1rowcol.item1 == l2rowcol.item1) {
+    return keyarrayRev[Tuple2(l1rowcol.item1, (l1rowcol.item2 + sameRowShift) % 5)]! +
+        keyarrayRev[Tuple2(l2rowcol.item1, (l2rowcol.item2 + sameRowShift) % 5)]!;
+    // Same col; Take letters immediately below each.
+  } else if (l1rowcol.item2 == l2rowcol.item2) {
+    return keyarrayRev[Tuple2((l1rowcol.item1 + sameColShift) % 5, l1rowcol.item2)]! +
+        keyarrayRev[Tuple2((l2rowcol.item1 + sameColShift) % 5, l2rowcol.item2)]!;
+    // Use rectangle method in array to use the row of each item and col of the other item.
+  } else {
+    return keyarrayRev[Tuple2(l1rowcol.item1, l2rowcol.item2)]! +
+        keyarrayRev[Tuple2(l2rowcol.item1, l1rowcol.item2)]!;
+  }
+}
+
 /// Encrypts an input with the Playfair cipher using a given keyword.
 /// The alphabet is derived from the input and must be the same as the keyword's.
 ///
 /// padChar is the character used for padding the plaintext pairs in the
 /// case of repeat letters. padCharPadChar is used for repeats of the padChar
 /// letter (pairs cannot be the same letter).
-Cryptext playfairEncrypt(Cryptext input, Cryptext keyword, [String padChar = '', String padCharPadChar = '']) {
+Cryptext playfairEncrypt(Cryptext plaintext, Cryptext keyword, [String padChar = '', String padCharPadChar = '']) {
   /*
   padChar is 'X' in the traditional Playfair algorithm. This uses the 3rd to last
   letter in the alphabet. Which in default english is X. padCharPadChar is set to
   the final letter in the alphabet.
   */
 
-  Alphabet a = input.alphabet;
+  Alphabet a = plaintext.alphabet;
 
   // Third to last letter in alphabet (SE 'X').
   if (padChar == '') { padChar = a.letters[a.length - 3]; }
@@ -120,7 +147,7 @@ Cryptext playfairEncrypt(Cryptext input, Cryptext keyword, [String padChar = '',
       keyarray.entries.map((e) => MapEntry(e.value, e.key)));
 
   // Build the list of letter pairs.
-  List<String> plaintextPairs = buildPlaintextPairs(input, padChar, padCharPadChar);
+  List<String> plaintextPairs = buildPlaintextPairs(plaintext, padChar, padCharPadChar);
 
   // Encrypt the plaintext pairs using the keyarray.
   List<String> output = [];
@@ -129,22 +156,35 @@ Cryptext playfairEncrypt(Cryptext input, Cryptext keyword, [String padChar = '',
     Tuple2<int, int> l1rowcol = keyarray[pair[0]]!;
     Tuple2<int, int> l2rowcol = keyarray[pair[1]]!;
 
-    // Same row; Take letters immediately left of each.
-    if (l1rowcol.item1 == l2rowcol.item1) {
-      output.add(keyarrayRev[Tuple2(l1rowcol.item1, (l1rowcol.item2 + 1) % 5)]! +
-          keyarrayRev[Tuple2(l2rowcol.item1, (l2rowcol.item2 + 1) % 5)]!);
-    // Same col; Take letters immediately below each.
-    } else if (l1rowcol.item2 == l2rowcol.item2) {
-      output.add(keyarrayRev[Tuple2((l1rowcol.item1 + 1) % 5, l1rowcol.item2)]! +
-          keyarrayRev[Tuple2((l2rowcol.item1 + 1) % 5, l2rowcol.item2)]!);
-    // Use rectangle method in array to use the row of each item and col of the other item.
-    } else {
-      output.add(keyarrayRev[Tuple2(l1rowcol.item1, l2rowcol.item2)]! +
-          keyarrayRev[Tuple2(l2rowcol.item1, l1rowcol.item2)]!);
-    }
+    output.add(cryptPair(keyarray, keyarrayRev, l1rowcol, l2rowcol, encrypt: true));
   }
-  return Cryptext.fromString(output.join(" "));
+  return Cryptext.fromString(output.join(""), alphabet: plaintext.alphabet);
 }
+
+/// Decrypts a ciphertext that has been encrypted with the Playfair cipher,
+/// using a a given keyword. Does not remove padding characters.
+Cryptext playfairDecrypt(Cryptext ciphertext, Cryptext keyword) {
+
+  if (!ciphertext.isExclusiveToAlphabet) {
+    throw Exception("PlayfairParametersError: Input includes characters that are not in the provided alphabet.");
+  }
+
+  // Keyarray and reverse maps.
+  Map<String, Tuple2<int, int>> keyarray = buildKeyarray(ciphertext.alphabet, keyword);
+  Map<Tuple2<int, int>, String> keyarrayRev = Map.fromEntries(
+      keyarray.entries.map((e) => MapEntry(e.value, e.key)));
+
+  // Decrypts them two at a time using cryptPair.
+  List<String> output = [];
+  for (int i = 0; i < ciphertext.letters.length; i += 2) {
+    Tuple2<int, int> l1rowcol = keyarray[ciphertext.letters[i]]!;
+    Tuple2<int, int> l2rowcol = keyarray[ciphertext.letters[i + 1]]!;
+    output.add(cryptPair(keyarray, keyarrayRev, l1rowcol, l2rowcol, encrypt: false));
+  }
+  return Cryptext.fromString(output.join(""), alphabet: ciphertext.alphabet);
+}
+
+
 
 void main() {
   Alphabet a = Alphabet.fromString(letters: "ABCDEFGHIKLMNOPQRSTUVWXYZ");
@@ -152,4 +192,7 @@ void main() {
   Cryptext keyword = Cryptext.fromString("PLAYFAIR", alphabet: a);
   Cryptext ciphertext = playfairEncrypt(plaintext, keyword);
   print(ciphertext);
+
+  Cryptext plaintextFromCiphertext = playfairDecrypt(ciphertext, keyword);
+  print(plaintextFromCiphertext);
 }
