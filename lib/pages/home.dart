@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:veil/data/cipher_pages.dart';
 
 // Local
 import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/cryptext.dart';
-import 'package:veil/pages/page_cipher_affine.dart';
-import 'package:veil/pages/page_cipher_rail_fence.dart';
-import 'package:veil/pages/page_cipher_substitution.dart';
-import 'package:veil/pages/page_cipher_viginere.dart';
 import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/cipher_selection_button.dart';
-import 'package:veil/pages/page_cipher_shift.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
@@ -46,6 +42,8 @@ class _HomePage extends State<HomePage> {
     double contextWidth = MediaQuery.of(context).size.width - 2*outerPadding;
     double contextHeight = MediaQuery.of(context).size.height;
 
+    Map<String, Widget> cipherPages = getCipherPages(myDefaultAlphabet);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -73,39 +71,16 @@ class _HomePage extends State<HomePage> {
                   Divider(),
 
                   Expanded(
-                    child: ListView(
-                      children: [
-                        // Shift cipher button
-                        CipherSelectionButton(
-                          text: 'Shift Cipher',
-                          targetPage: () => PageCipherShift(defaultAlphabet: myDefaultAlphabet),
-                        ),
-                        Divider(),
-
-                        CipherSelectionButton(
-                          text: 'Affine Cipher',
-                          targetPage: () => PageCipherAffine(defaultAlphabet: myDefaultAlphabet),
-                        ),
-                        Divider(),
-
-                        CipherSelectionButton(
-                          text: 'Viginere Cipher',
-                          targetPage: () => PageCipherViginere(defaultAlphabet: myDefaultAlphabet),
-                        ),
-                        Divider(),
-
-                        CipherSelectionButton(
-                          text: 'Rail Fence Cipher',
-                          targetPage: () => PageCipherRailFence(defaultAlphabet: myDefaultAlphabet),
-                        ),
-                        Divider(),
-
-                        CipherSelectionButton(
-                          text: 'Substitution Cipher',
-                          targetPage: () => PageCipherSubstitution(defaultAlphabet: myDefaultAlphabet),
-                        ),
-
-                      ],
+                    child: ListView.separated(
+                      itemCount: cipherPages.length,
+                      separatorBuilder: (BuildContext context, int index) => const Divider(),
+                      itemBuilder: (BuildContext context, int i) {
+                        print(cipherPages[i]);
+                        return CipherSelectionButton(
+                          text: cipherPages.keys.toList()[i],
+                          targetPage: () => cipherPages[cipherPages.keys.toList()[i]]!
+                        );
+                      },
                     ),
                   )
                 ],
