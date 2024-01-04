@@ -133,7 +133,7 @@ class _HomePage extends State<HomePage> {
 
                   // Open's link to repo; https://github.com/jacob-myers/Veil
                   MyTextButton(
-                    text: "Open Github Code",
+                    text: "Github Code",
                     width: 190,
                     onTap: () async {
                       var url = Uri.parse("https://github.com/jacob-myers/Veil");
