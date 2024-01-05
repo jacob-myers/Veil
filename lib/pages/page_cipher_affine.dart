@@ -2,352 +2,213 @@ import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
 // Local
-import 'package:veil/pages/cipher_page_state.dart';
-import 'package:veil/data_structures/alphabet.dart';
-import 'package:veil/data_structures/cryptext.dart';
-import 'package:veil/data_structures/break_method.dart';
-import 'package:veil/functions/cipher_affine.dart';
-import 'package:veil/widgets/alphabet_editor.dart';
-import 'package:veil/widgets/appbar_cipher_page.dart';
-import 'package:veil/widgets/crypt_io/crypt_io.dart';
-import 'package:veil/widgets/cipher_affine/a_entry.dart';
-import 'package:veil/widgets/cipher_affine/b_entry.dart';
-import 'package:veil/widgets/break_method_list.dart';
-import 'package:veil/widgets/ciphertext_plaintext_pair_entry.dart';
-import 'package:veil/widgets/disabled_text_display.dart';
+// Pages
+import 'package:veil/pages/page_cipher.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
 
-class PageCipherAffine extends StatefulWidget {
-  Alphabet defaultAlphabet;
-  Alphabet alphabet;
-  Cryptext plaintext;
-  Cryptext ciphertext;
-  String mode;
+// Data Structures
+import 'package:veil/data_structures/alphabet.dart';
+import 'package:veil/data_structures/break_method.dart';
+import 'package:veil/data_structures/cryptext.dart';
 
+// Functions
+import 'package:veil/functions/cipher_affine.dart';
+
+// Widgets
+import 'package:veil/widgets/alphabet_editor.dart';
+import 'package:veil/widgets/cipher_affine/a_entry.dart';
+import 'package:veil/widgets/cipher_affine/b_entry.dart';
+import 'package:veil/widgets/ciphertext_plaintext_pair_entry.dart';
+import 'package:veil/widgets/disabled_text_display.dart';
+
+class PageCipherAffine extends PageCipher {
   PageCipherAffine({
     super.key,
-    required this.defaultAlphabet,
-    Cryptext? plaintext,
-    Cryptext? ciphertext,
-    this.mode = 'encrypt',
-  })
-  : alphabet = defaultAlphabet,
-    plaintext = plaintext ?? Cryptext(alphabet: defaultAlphabet),
-    ciphertext = ciphertext ?? Cryptext(alphabet: defaultAlphabet);
+    super.title = "Affine Cipher",
+    required super.defaultAlphabet,
+  });
 
   @override
   State<PageCipherAffine> createState() => _PageCipherAffine();
 }
 
-class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageState {
+class _PageCipherAffine extends State<PageCipherAffine> {
   int a = 1;
   int b = 0;
   int breakA = 1;
   int breakB = 0;
-  BreakMethod? breakMethod;
-  List<BreakMethod> breakMethods = [];
-  bool breakError = false;
 
-  @override
-  initState() {
-    super.initState();
-    _initBreakMethods();
+  void callSetState() {
+    setState(() {});
   }
 
-  void _initBreakMethods() {
-    /// Initialize the cipher breaking methods.
-    breakMethods = [
+  @override
+  void initState() {
+    super.initState();
+
+    widget.initSetPlaintextThenCiphertext((Cryptext cryptext) => {
+      setState(() {
+        cryptext.alphabet = widget.alphabet;
+          widget.plaintext = cryptext;
+        try {
+          widget.ciphertext = affineEncrypt(widget.plaintext, a, b);
+        } catch(e) {
+          widget.ciphertext = Cryptext(letters: widget.plaintext.lettersInAlphabet);
+        }
+      })
+    });
+
+    widget.initSetCiphertextThenPlaintext((Cryptext cryptext) => {
+      setState(() {
+        cryptext.alphabet = widget.alphabet;
+        widget.ciphertext = cryptext;
+        try {
+          widget.plaintext = affineDecrypt(widget.ciphertext, a, b);
+        } catch (e) {
+          widget.plaintext = Cryptext(letters: widget.ciphertext.lettersInAlphabet);
+        }
+      })
+    });
+
+    widget.setBreakMethods([
       BreakMethod(
         tag: 'known_plaintext',
         title: 'Known Plaintext',
         description: "Known plaintext is when the plaintext of some corresponding ciphertext is known. For an affine cipher, at least 2 pairs have to be known, and have to be a distance apart in the alphabet space(n) that is relatively prime with the alphabet space(n).",
-        build: knownPlaintextContent
+        build: () {
+          return Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CiphertextPlaintextPairEntry(
+                  alphabet: widget.alphabet,
+                  onChanged: (Cryptext p, Cryptext c) {
+                    setState(() {
+                      if (isValidAffinePair(p, c)) {
+                        widget.breakError = false;
+                        if (isValidAffinePair(p, c)) {
+                          Tuple2 ab = findAB(p, c);
+                          breakA = ab.item1;
+                          breakB = ab.item2;
+                        }
+                      } else {
+                        widget.breakError = true;
+                        breakA = 1;
+                        breakB = 0;
+                      }
+                    });
+                  },
+                ),
+
+                const Divider(height: 30,),
+
+                // Key calculated from input.
+                GestureDetector(
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: Text(
+                      widget.breakError ? "Invalid input." : 'a = $breakA      b = $breakB',
+                      style: CustomStyle.headers,
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      a = breakA;
+                      b = breakB;
+                    });
+                  },
+                ),
+              ],
+            )
+          );
+        }
       ),
-    ];
-    try {
-      breakMethod = breakMethods[0];
-    } on RangeError {
-      breakMethod = null;
-    }
-  }
-
-  @override
-  void setPlaintextThenCiphertext(Cryptext cryptext) {
+    ]);
     setState(() {
-      cryptext.alphabet = widget.alphabet;
-      widget.plaintext = cryptext;
-      try {
-        widget.ciphertext = affineEncrypt(widget.plaintext, a, b);
-      } catch(e) {
-        widget.ciphertext = Cryptext(letters: widget.plaintext.lettersInAlphabet);
-      }
-    });
-  }
-
-  @override
-  void setCiphertextThenPlaintext(Cryptext cryptext) {
-    setState(() {
-      cryptext.alphabet = widget.alphabet;
-      widget.ciphertext = cryptext;
-      try {
-        widget.plaintext = affineDecrypt(widget.ciphertext, a, b);
-      } catch (e) {
-        widget.plaintext = Cryptext(letters: widget.ciphertext.lettersInAlphabet);
-      }
-    });
-  }
-
-  @override
-  void setBreakMethod(BreakMethod method) {
-    // TODO: implement setBreakMethod
-  }
-
-  @override
-  void onModeButtonPress(String mode) {
-    setState(() {
-      widget.mode = mode;
-    });
-  }
-
-  void setAlphabet (Alphabet newAlphabet) {
-    setState(() {
-      widget.alphabet = newAlphabet;
-    });
-  }
-
-  void setA(int a) {
-    setState(() {
-      this.a = a;
-    });
-  }
-
-  void setB(int b) {
-    setState(() {
-      this.b = b;
+      print(widget.breakMethod);
+      print(widget.breakMethods);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    double outerPadding = 20;
-
-    if (widget.mode == 'encrypt'){
-      // Initializes ciphertext from plaintext.
-      setPlaintextThenCiphertext(widget.plaintext);
-    }
-    if (widget.mode == 'decrypt') {
-      // Initializes plaintext from ciphertext.
-      setCiphertextThenPlaintext(widget.ciphertext);
-    }
-    if (widget.mode == 'break') {
-      // Initializes plaintext from ciphertext.
-      setCiphertextThenPlaintext(widget.ciphertext);
-    }
-
-    return Scaffold(
-        appBar: AppbarCipherPage(
-          title: 'Affine Cipher',
-          mode: widget.mode,
-          onModeButtonPress: onModeButtonPress,
-        ),
-
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(outerPadding),
-            child: getBody(context),
-          ),
-        )
-    );
-  }
-
-  Widget getBody(BuildContext context) {
-    return Column(
-      children: [
-        CryptIO(
-          encrypt: widget.mode == 'encrypt',
-          alphabet: widget.alphabet,
-          setPlaintext: setPlaintextThenCiphertext,
-          setCiphertext: setCiphertextThenPlaintext,
-          plaintext: widget.plaintext,
-          ciphertext: widget.ciphertext,
-        ),
-
-        Divider(height: 30),
-
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: AEntry(
-                              alphabet: widget.alphabet,
-                              setA: setA,
-                              a: a,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: BEntry(
-                              alphabet: widget.alphabet,
-                              setB: setB,
-                              b: b,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-
-                          SizedBox(
-                            width: 150,
-                            child: DisabledTextDisplay(
-                                title: "Alphabet Space",
-                                content: widget.alphabet.length.toString()
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      Text(
-                        "Mathematical Algorithm: C(p) = ap + b (mod(n))",
-                        style: CustomStyle.bodyLargeText,
-                      ),
-
-                    ],
-                  )
-              ),
-
-              const VerticalDivider(
-                width: 40,
-                thickness: 2,
-              ),
-
-              // Right Column.
-              Expanded(
-                child: AlphabetEditor(
-                  title: "Instance alphabet",
-                  alphabet: widget.alphabet,
-                  defaultAlphabet: widget.defaultAlphabet,
-                  setAlphabet: setAlphabet,
-                  showResetButton: true,
-                )
-              ),
-            ],
-          ),
-        ),
-
-        widget.mode == 'break' ? getBreakSection() : Container(),
-      ],
-    );
-  }
-
-  Widget getBreakSection() {
-    if (breakMethod == null) {
-      return Container();
-    }
-
-    return Column(
-      children: [
-        const SizedBox(height: 10),
-        const Divider(height: 30),
-
-        SizedBox(
-          height: 300,
-          child: Row(
-            children: [
-              BreakMethodList(
-                methods: breakMethods,
-                setBreakMethod: setBreakMethod,
-                selectedMethod: breakMethod!,
-              ),
-
-              //SizedBox(width: 20),
-              const VerticalDivider(width: 40, thickness: 2),
-
-              breakMethod!.build(),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget knownPlaintextContent() {
-    return Expanded(
-        child: Column(
+    return widget.pageFromSectionsDefaultBreakSectionCombinedED(
+      callSetState: callSetState,
+      cryptSection: IntrinsicHeight(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CiphertextPlaintextPairEntry(
-              alphabet: widget.alphabet,
-              onChanged: onKnownPairChange,
+            Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: AEntry(
+                            alphabet: widget.alphabet,
+                            setA: (int newA) {
+                              setState(() { a = newA; });
+                            },
+                            a: a,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: BEntry(
+                            alphabet: widget.alphabet,
+                            setB: (int newB) {
+                              setState(() { b = newB; });
+                            },
+                            b: b,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+
+                        SizedBox(
+                          width: 150,
+                          child: DisabledTextDisplay(
+                            title: "Alphabet Space",
+                            content: widget.alphabet.length.toString()
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    Text(
+                      "Mathematical Algorithm: C(p) = ap + b (mod(n))",
+                      style: CustomStyle.bodyLargeText,
+                    ),
+
+                  ],
+                )
             ),
 
-            const Divider(height: 30,),
+            const VerticalDivider(
+              width: 40,
+              thickness: 2,
+            ),
 
-            // Key calculated from input.
-            GestureDetector(
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: Text(
-                  breakError ? "Invalid input." : 'a = $breakA      b = $breakB',
-                  style: CustomStyle.headers,
-                ),
-              ),
-              onTap: () {
-                setState(() {
-                  setA(breakA);
-                  setB(breakB);
-                });
-              },
+            // Right Column.
+            Expanded(
+              child: AlphabetEditor(
+                title: "Instance alphabet",
+                alphabet: widget.alphabet,
+                defaultAlphabet: widget.defaultAlphabet,
+                setAlphabet: (Alphabet newAlphabet) {
+                  setState(() { widget.alphabet = newAlphabet; });
+                },
+                showResetButton: true,
+              )
             ),
           ],
-        )
+        ),
+      ),
     );
-  }
-
-  void onKnownPairChange(Cryptext p, Cryptext c) {
-    setState(() {
-      if (isValidAffinePair(p, c)) {
-        breakError = false;
-        if (isValidAffinePair(p, c)) {
-          Tuple2 ab = findAB(p, c);
-          breakA = ab.item1;
-          breakB = ab.item2;
-        }
-      } else {
-        breakError = true;
-        breakA = 1;
-        breakB = 0;
-      }
-    });
-  }
-
-  bool isValidAffinePair(Cryptext p, Cryptext c) {
-    if (p.length == 0 || c.length == 0) {
-      return false;
-    }
-    if (p.length != c.length) {
-      return false;
-    }
-    if (!p.isExclusiveToAlphabet || !c.isExclusiveToAlphabet) {
-      return false;
-    }
-
-    try {
-      var ab = findAB(p, c);
-      var a = ab.item1;
-      var b = ab.item2;
-      return c == affineEncrypt(p, a, b);
-    } catch(e) {
-      return false;
-    }
   }
 }
