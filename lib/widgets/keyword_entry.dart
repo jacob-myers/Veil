@@ -34,7 +34,7 @@ class _KeywordEntry extends State<KeywordEntry> {
       value: widget.keyword.lettersAsString,
       onChanged: (String val) {
         setState(() {
-          Cryptext newKeyWord = Cryptext.fromString(val);
+          Cryptext newKeyWord = Cryptext.fromString(val, alphabet: widget.alphabet);
           if (newKeyWord.lettersAsString == "") {
             // Empty
             keywordError = null;
