@@ -126,10 +126,6 @@ class _PageCipherAffine extends State<PageCipherAffine> {
         }
       ),
     ]);
-    setState(() {
-      print(widget.breakMethod);
-      print(widget.breakMethods);
-    });
   }
 
   @override
