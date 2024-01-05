@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:veil/data_structures/alphabet.dart';
+import 'package:veil/pages/page_cipher_playfair.dart';
 
 import 'package:veil/pages/page_cipher_shift.dart';
 import 'package:veil/pages/page_cipher_affine.dart';
@@ -15,5 +16,6 @@ Map<String, Widget> getCipherPages(Alphabet defaultAlphabet) {
     'Viginere Cipher' : PageCipherViginere(defaultAlphabet: defaultAlphabet),
     'Rail Fence Cipher' : PageCipherRailFence(defaultAlphabet: defaultAlphabet),
     'Substitution Cipher' : PageCipherSubstitution(defaultAlphabet: defaultAlphabet),
+    'Playfair Cipher' : PageCipherPlayfair(defaultAlphabet: Alphabet.fromString(letters: "ABCDEFGHIKLMNOPQRSTUVWXYZ")),
   };
 }
