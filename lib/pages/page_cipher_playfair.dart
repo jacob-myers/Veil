@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:veil/data_structures/alphabet.dart';
 
 // Local
+// Pages
 import 'package:veil/pages/page_cipher.dart';
+
+// Data Structures
 import 'package:veil/data_structures/cryptext.dart';
+
+// Functions
 import 'package:veil/functions/cipher_playfair.dart';
+
+// Widgets
 import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/disabled_text_display.dart';
 import 'package:veil/widgets/keyword_entry.dart';
@@ -12,8 +19,8 @@ import 'package:veil/widgets/keyword_entry.dart';
 class PageCipherPlayfair extends PageCipher {
   PageCipherPlayfair({
     super.key,
-    required super.defaultAlphabet,
     super.title = "Playfair Cipher",
+    required super.defaultAlphabet,
   });
 
   @override
