@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:veil/data_structures/alphabet.dart';
 
 // Local
 import 'package:veil/pages/page_cipher.dart';
@@ -27,7 +28,7 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
 
   @override
   void initState() {
-    keyword = Cryptext.fromString("", alphabet: widget.alphabet);
+    keyword = Cryptext(alphabet: widget.alphabet);
     super.initState();
 
     // The setText methods of the superclass are initialized here (PageCipher)
@@ -35,9 +36,12 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
       setState(() {
         widget.plaintext = cryptext;
         widget.plaintext.alphabet = widget.alphabet;
+        keyword.alphabet = widget.alphabet;
+
         try {
           widget.ciphertext = playfairEncrypt(Cryptext(letters: widget.plaintext.lettersInAlphabet, alphabet: widget.alphabet), keyword);
         } catch (e) {
+          print(e);
           widget.ciphertext = widget.plaintext;
         }
       })
@@ -46,6 +50,7 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
       setState(() {
         widget.ciphertext = cryptext;
         widget.ciphertext.alphabet = widget.alphabet;
+        keyword.alphabet = widget.alphabet;
 
         List<String> lettersToUse = widget.ciphertext.lettersInAlphabet.toList();
         lettersToUse.length % 2 == 1 ? lettersToUse.removeLast() : null;
@@ -53,6 +58,7 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
         try {
           widget.plaintext = playfairDecrypt(Cryptext(letters: lettersToUse, alphabet: widget.alphabet), keyword);
         } catch (e) {
+          print(e);
           widget.plaintext = widget.ciphertext;
         }
       })
@@ -113,7 +119,11 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
                 title: "Instance alphabet",
                 alphabet: widget.alphabet,
                 defaultAlphabet: widget.defaultAlphabet,
-                setAlphabet: widget.setAlphabet,
+                setAlphabet: (Alphabet newAlphabet) {
+                  setState(() {
+                    widget.alphabet = newAlphabet;
+                  });
+                },
                 showResetButton: true,
               )
             ),
