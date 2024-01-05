@@ -75,7 +75,6 @@ class _HomePage extends State<HomePage> {
                       itemCount: cipherPages.length,
                       separatorBuilder: (BuildContext context, int index) => const Divider(),
                       itemBuilder: (BuildContext context, int i) {
-                        print(cipherPages[i]);
                         return CipherSelectionButton(
                           text: cipherPages.keys.toList()[i],
                           targetPage: () => cipherPages[cipherPages.keys.toList()[i]]!
