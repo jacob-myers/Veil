@@ -35,7 +35,7 @@ class PageCipher extends StatefulWidget {
 
   void setBreakMethods(List<BreakMethod> breakMethods) {
     /// Initialize the cipher breaking methods from parameter.
-    breakMethods = breakMethods;
+    this.breakMethods = breakMethods;
     try {
       breakMethod = breakMethods[0];
     } on RangeError {
