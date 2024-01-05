@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
+// Local
 import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/break_method.dart';
-
 import 'package:veil/data_structures/cryptext.dart';
-
-import '../widgets/appbar_cipher_page.dart';
-import '../widgets/crypt_io/crypt_io.dart';
+import 'package:veil/widgets/appbar_cipher_page.dart';
+import 'package:veil/widgets/crypt_io/crypt_io.dart';
 
 class PageCipher extends StatefulWidget {
   Alphabet defaultAlphabet;
@@ -62,18 +61,6 @@ class PageCipher extends StatefulWidget {
   void initSetCiphertextThenPlaintext(Function(Cryptext) setCiphertextThenPlaintext) {
     this.setCiphertextThenPlaintext = setCiphertextThenPlaintext;
   }
-
-  /*
-  void setPlaintextThenCiphertext(Cryptext cryptext) {
-    plaintext = cryptext;
-    ciphertext = cryptext;
-  }
-
-  void setCiphertextThenPlaintext(Cryptext cryptext) {
-    ciphertext = cryptext;
-    plaintext = cryptext;
-  }
-  */
 
   void updateMode() {
     // Initializes ciphertext from plaintext if encrypting.
@@ -159,98 +146,3 @@ class _PageCipher extends State<PageCipher> {
     return Container();
   }
 }
-
-/*
-class _PageCipher extends State<PageCipher> {
-
-  @override
-  initState() {
-    super.initState();
-    setBreakMethods([]);
-  }
-
-
-  void setBreakMethods(List<BreakMethod> breakMethods) {
-    /// Initialize the cipher breaking methods from parameter.
-    breakMethods = breakMethods;
-    try {
-      breakMethod = breakMethods[0];
-    } on RangeError {
-      breakMethod = null;
-    }
-  }
-
-  void onModeButtonPress(String mode) {
-    setState(() {
-      widget.mode = mode;
-    });
-  }
-
-  void setBreakMethod(BreakMethod method) {
-    setState(() {
-      breakMethod = method;
-    });
-  }
-
-  void setAlphabet (Alphabet newAlphabet) {
-    setState(() {
-      widget.alphabet = newAlphabet;
-    });
-  }
-
-  void setPlaintextThenCiphertext(Cryptext cryptext) {
-    setState(() {
-      cryptext.alphabet = widget.alphabet;
-      widget.plaintext = cryptext;
-    });
-  }
-
-  void setCiphertextThenPlaintext(Cryptext cryptext) {
-    setState(() {
-      cryptext.alphabet = widget.alphabet;
-      widget.ciphertext = cryptext;
-    });
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    double outerPadding = 20;
-
-    if (widget.mode == 'encrypt'){
-      // Initializes ciphertext from plaintext.
-      setPlaintextThenCiphertext(widget.plaintext);
-    }
-    if (widget.mode == 'decrypt') {
-      // Initializes plaintext from ciphertext.
-      setCiphertextThenPlaintext(widget.ciphertext);
-    }
-    if (widget.mode == 'break') {
-      // Initializes plaintext from ciphertext.
-      setCiphertextThenPlaintext(widget.ciphertext);
-    }
-
-    return Scaffold(
-      appBar: AppbarCipherPage(
-        title: widget.title,
-        mode: widget.mode,
-        onModeButtonPress: onModeButtonPress,
-      ),
-
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(outerPadding),
-          child: CryptIO(
-            encrypt: widget.mode == 'encrypt',
-            alphabet: widget.alphabet,
-            setPlaintext: setPlaintextThenCiphertext,
-            setCiphertext: setCiphertextThenPlaintext,
-            plaintext: widget.plaintext,
-            ciphertext: widget.ciphertext,
-          ),
-        ),
-      )
-    );
-  }
-}
-*/

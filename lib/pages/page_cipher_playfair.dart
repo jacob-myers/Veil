@@ -29,6 +29,8 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
   void initState() {
     keyword = Cryptext.fromString("", alphabet: widget.alphabet);
     super.initState();
+
+    // The setText methods of the superclass are initialized here (PageCipher)
     widget.initSetPlaintextThenCiphertext((Cryptext cryptext) => {
       setState(() {
         widget.plaintext = cryptext;
@@ -44,12 +46,15 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
       setState(() {
         widget.ciphertext = cryptext;
         widget.ciphertext.alphabet = widget.alphabet;
+
+        List<String> lettersToUse = widget.ciphertext.lettersInAlphabet.toList();
+        lettersToUse.length % 2 == 1 ? lettersToUse.removeLast() : null;
+
         try {
-          widget.plaintext = playfairDecrypt(widget.ciphertext, keyword);
+          widget.plaintext = playfairDecrypt(Cryptext(letters: lettersToUse, alphabet: widget.alphabet), keyword);
         } catch (e) {
-          widget.plaintext = Cryptext();
+          widget.plaintext = widget.ciphertext;
         }
-        widget.plaintext = playfairDecrypt(widget.ciphertext, keyword);
       })
     });
   }
