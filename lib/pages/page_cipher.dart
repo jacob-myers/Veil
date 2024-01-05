@@ -105,15 +105,16 @@ class PageCipher extends StatefulWidget {
   }
 
   /// Builds the page given the different parts.
-  Widget pageFromSections(BuildContext context, { Widget? encryptSection, Widget? decryptSection, Widget? breakSection, required Function() callSetState }) {
+  Widget pageFromSections({ Widget? encryptSection, Widget? decryptSection, Widget? breakSection, required Function() callSetState, bool encryptDecryptCombined = false}) {
+    decryptSection = encryptDecryptCombined && encryptSection != null ? encryptSection : decryptSection;
+
     bool buildEncrypt = mode == 'encrypt' && encryptSection != null;
     bool buildDecrypt = (mode == 'decrypt' || mode == 'break') && decryptSection != null;
     bool buildBreak = mode == 'break' && breakSection != null;
 
-    double outerPadding = 20;
-
     updateMode();
 
+    double outerPadding = 20;
     return Scaffold(
       appBar: AppbarCipherPage(
         title: title,
