@@ -70,7 +70,7 @@ List<String> buildPlaintextPairs(Cryptext plaintext, String padChar, String padC
     throw Exception("PlayfairParametersError: Input includes characters that are not in the provided alphabet.");
   }
 
-  List<String> letters = plaintext.letters;
+  List<String> letters = plaintext.letters.toList();
   List<String> pairs = [];
 
   while (letters.isNotEmpty) {
