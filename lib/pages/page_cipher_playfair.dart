@@ -11,6 +11,7 @@ import 'package:veil/widgets/keyword_entry.dart';
 
 class PageCipherPlayfair extends PageCipher {
   PageCipherPlayfair({
+    super.key,
     required super.defaultAlphabet,
     super.title = "Playfair Cipher",
   });
@@ -67,10 +68,9 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.pageFromSections(
-      encryptDecryptCombined: true,
+    return widget.pageFromSectionsDefaultBreakSectionCombinedED(
       callSetState: callSetState,
-      encryptSection: IntrinsicHeight(
+      cryptSection: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -120,9 +120,7 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
                 alphabet: widget.alphabet,
                 defaultAlphabet: widget.defaultAlphabet,
                 setAlphabet: (Alphabet newAlphabet) {
-                  setState(() {
-                    widget.alphabet = newAlphabet;
-                  });
+                  setState(() { widget.alphabet = newAlphabet; });
                 },
                 showResetButton: true,
               )

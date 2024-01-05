@@ -5,6 +5,7 @@ import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/break_method.dart';
 import 'package:veil/data_structures/cryptext.dart';
 import 'package:veil/widgets/appbar_cipher_page.dart';
+import 'package:veil/widgets/break_method_list.dart';
 import 'package:veil/widgets/crypt_io/crypt_io.dart';
 
 class PageCipher extends StatefulWidget {
@@ -31,18 +32,6 @@ class PageCipher extends StatefulWidget {
   : alphabet = defaultAlphabet,
     plaintext = plaintext ?? Cryptext(alphabet: defaultAlphabet),
     ciphertext = ciphertext ?? Cryptext(alphabet: defaultAlphabet);
-
-  void setAlphabet (Alphabet newAlphabet) {
-    alphabet = newAlphabet;
-  }
-
-  void setBreakMethod(BreakMethod method) {
-    breakMethod = method;
-  }
-
-  void onModeButtonPress(String newMode) {
-    mode = newMode;
-  }
 
   void setBreakMethods(List<BreakMethod> breakMethods) {
     /// Initialize the cipher breaking methods from parameter.
@@ -77,27 +66,93 @@ class PageCipher extends StatefulWidget {
   }
 
   /// Builds the page given the whole body.
-  Widget pageFromWidget(BuildContext context, { required Widget body }) {
+  Widget pageFromBody({ required Widget body, required Function() callSetState }) {
     updateMode();
 
     return Scaffold(
       appBar: AppbarCipherPage(
         title: title,
         mode: mode,
-        onModeButtonPress: onModeButtonPress,
+        onModeButtonPress: (String newMode) { mode = newMode; callSetState(); },
       ),
 
       body: body,
     );
   }
 
-  /// Builds the page given the different parts.
-  Widget pageFromSections({ Widget? encryptSection, Widget? decryptSection, Widget? breakSection, required Function() callSetState, bool encryptDecryptCombined = false}) {
-    decryptSection = encryptDecryptCombined && encryptSection != null ? encryptSection : decryptSection;
+  /// Builds the default break section using the breakMethods list.
+  Widget defaultBreakSection({required Function() callSetState}) {
+    if (breakMethod == null) {
+      return Container();
+    }
 
-    bool buildEncrypt = mode == 'encrypt' && encryptSection != null;
-    bool buildDecrypt = (mode == 'decrypt' || mode == 'break') && decryptSection != null;
-    bool buildBreak = mode == 'break' && breakSection != null;
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        const Divider(height: 30),
+
+        SizedBox(
+          height: 300,
+          child: Row(
+            children: [
+              BreakMethodList(
+                methods: breakMethods,
+                setBreakMethod: (BreakMethod newBreakMethod) {
+                  breakMethod = newBreakMethod;
+                  callSetState();
+                },
+                selectedMethod: breakMethod,
+              ),
+
+              //SizedBox(width: 20),
+              const VerticalDivider(width: 40, thickness: 2),
+
+              breakMethod!.build(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Builds the page from the encrypt and decrypt sections, using the default
+  /// break section.
+  Widget pageFromSectionsDefaultBreakSection({ required Widget encryptSection, required Widget decryptSection, required Function() callSetState}) {
+    return pageFromSections(
+      callSetState: callSetState,
+      encryptSection: encryptSection,
+      decryptSection: decryptSection,
+      breakSection: defaultBreakSection(callSetState: callSetState),
+    );
+  }
+
+  /// Builds the page from the encrypt/decrypt and break sections. Use this if
+  /// encrypt and decrypt sections are the same.
+  Widget pageFromSectionsCombinedED({ required Widget cryptSection, required Widget breakSection, required Function() callSetState }) {
+    return pageFromSections(
+      callSetState: callSetState,
+      encryptSection: cryptSection,
+      decryptSection: cryptSection,
+      breakSection: breakSection,
+    );
+  }
+
+  /// Builds the page from the encrypt/decrypt section. Use this if encrypt and
+  /// decrypt are the same and want to use the default break section.
+  Widget pageFromSectionsDefaultBreakSectionCombinedED({ required Widget cryptSection, required Function() callSetState }) {
+    return pageFromSections(
+      callSetState: callSetState,
+      encryptSection: cryptSection,
+      decryptSection: cryptSection,
+      breakSection: defaultBreakSection(callSetState: callSetState),
+    );
+  }
+
+  /// Builds the page given each part.
+  Widget pageFromSections({ required Widget encryptSection, required Widget decryptSection, required Widget breakSection, required Function() callSetState}) {
+    bool buildEncrypt = mode == 'encrypt';
+    bool buildDecrypt = mode == 'decrypt' || mode == 'break';
+    bool buildBreak = mode == 'break';
 
     updateMode();
 
