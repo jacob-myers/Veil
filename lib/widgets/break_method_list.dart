@@ -8,7 +8,7 @@ import 'package:veil/styles/styles.dart';
 
 class BreakMethodList extends StatefulWidget {
   final List<BreakMethod> methods;
-  final BreakMethod selectedMethod;
+  final BreakMethod? selectedMethod;
   final Function(BreakMethod) setBreakMethod;
   final TextStyle _style;
 
@@ -81,18 +81,19 @@ class _BreakMethodList extends State<BreakMethodList> {
 
                 // Descriptions.
                 //Spacer(),
+                widget.selectedMethod == null ? Container() :
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.selectedMethod.title, style: CustomStyle.headers),
+                      Text(widget.selectedMethod!.title, style: CustomStyle.headers),
                       const SizedBox(height: 10),
                       const Divider(),
 
                       Expanded(
                         child: SingleChildScrollView(
                           child: Text(
-                            widget.selectedMethod.description,
+                            widget.selectedMethod!.description,
                             style: CustomStyle.content,
                             textAlign: TextAlign.justify,
                           ),
