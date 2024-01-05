@@ -205,7 +205,7 @@ class _PageCipherAffine extends State<PageCipherAffine> implements CipherPageSta
                           const SizedBox(width: 20),
 
                           SizedBox(
-                            width: 140,
+                            width: 150,
                             child: DisabledTextDisplay(
                                 title: "Alphabet Space",
                                 content: widget.alphabet.length.toString()
