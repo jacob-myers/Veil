@@ -62,6 +62,29 @@ Tuple2<int, int> findAB(Cryptext p, Cryptext c) {
   throw Exception('NoValidPair');
 }
 
+/// If two pieces of cryptext are a valid pair. ie; is there a combination of
+/// an a and a b that can result in p being encrypted to c.
+bool isValidAffinePair(Cryptext p, Cryptext c) {
+  if (p.length == 0 || c.length == 0) {
+    return false;
+  }
+  if (p.length != c.length) {
+    return false;
+  }
+  if (!p.isExclusiveToAlphabet || !c.isExclusiveToAlphabet) {
+    return false;
+  }
+
+  try {
+    var ab = findAB(p, c);
+    var a = ab.item1;
+    var b = ab.item2;
+    return c == affineEncrypt(p, a, b);
+  } catch(e) {
+    return false;
+  }
+}
+
 void main () {
   Cryptext p = Cryptext.fromString('MY TEXT');
   Cryptext c = affineEncrypt(p, 5, 14);
