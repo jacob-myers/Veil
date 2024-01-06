@@ -81,7 +81,7 @@ class PageCipher extends StatefulWidget {
   }
 
   /// Builds the default break section using the breakMethods list.
-  Widget defaultBreakSection({required Function() callSetState}) {
+  Widget defaultBreakSection({ required Function() callSetState, double? height}) {
     if (breakMethod == null) {
       return Container();
     }
@@ -92,7 +92,7 @@ class PageCipher extends StatefulWidget {
         const Divider(height: 30),
 
         SizedBox(
-          height: 300,
+          height: height ?? 300,
           child: Row(
             children: [
               BreakMethodList(
@@ -117,18 +117,18 @@ class PageCipher extends StatefulWidget {
 
   /// Builds the page from the encrypt and decrypt sections, using the default
   /// break section.
-  Widget pageFromSectionsDefaultBreakSection({ required Widget encryptSection, required Widget decryptSection, required Function() callSetState}) {
+  Widget pageFromSectionsDefaultBreakSection({ double? defaultBreakHeight, required Function() callSetState, required Widget encryptSection, required Widget decryptSection }) {
     return pageFromSections(
       callSetState: callSetState,
       encryptSection: encryptSection,
       decryptSection: decryptSection,
-      breakSection: defaultBreakSection(callSetState: callSetState),
+      breakSection: defaultBreakSection(callSetState: callSetState, height: defaultBreakHeight),
     );
   }
 
   /// Builds the page from the encrypt/decrypt and break sections. Use this if
   /// encrypt and decrypt sections are the same.
-  Widget pageFromSectionsCombinedED({ required Widget cryptSection, required Widget breakSection, required Function() callSetState }) {
+  Widget pageFromSectionsCombinedED({ required Function() callSetState, required Widget cryptSection, required Widget breakSection }) {
     return pageFromSections(
       callSetState: callSetState,
       encryptSection: cryptSection,
@@ -139,12 +139,12 @@ class PageCipher extends StatefulWidget {
 
   /// Builds the page from the encrypt/decrypt section. Use this if encrypt and
   /// decrypt are the same and want to use the default break section.
-  Widget pageFromSectionsDefaultBreakSectionCombinedED({ required Widget cryptSection, required Function() callSetState }) {
+  Widget pageFromSectionsDefaultBreakSectionCombinedED({ double? defaultBreakHeight, required Function() callSetState, required Widget cryptSection }) {
     return pageFromSections(
       callSetState: callSetState,
       encryptSection: cryptSection,
       decryptSection: cryptSection,
-      breakSection: defaultBreakSection(callSetState: callSetState),
+      breakSection: defaultBreakSection(callSetState: callSetState, height: defaultBreakHeight),
     );
   }
 
