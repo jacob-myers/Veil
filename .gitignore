@@ -53,3 +53,6 @@ pubspec.lock
 
 # Source files for original icon.
 /art_project_files
+
+# Demos and visuals.
+/demos_and_visuals_local/
