@@ -16,18 +16,18 @@ import 'package:veil/widgets/alphabet_editor.dart';
 import 'package:veil/widgets/disabled_text_display.dart';
 import 'package:veil/widgets/keyword_entry.dart';
 
-class PageCipherVigenere extends PageCipher {
-  PageCipherVigenere({
+class PageCipherViginere extends PageCipher {
+  PageCipherViginere({
     super.key,
     super.title = "Viginere Cipher",
     required super.defaultAlphabet,
   });
 
   @override
-  State<PageCipherVigenere> createState() => _PageCipherVigenere();
+  State<PageCipherViginere> createState() => _PageCipherViginere();
 }
 
-class _PageCipherVigenere extends State<PageCipherVigenere> {
+class _PageCipherViginere extends State<PageCipherViginere> {
   Cryptext keyword = Cryptext();
 
   void callSetState() {
