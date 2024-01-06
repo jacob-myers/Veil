@@ -4,20 +4,25 @@ import 'package:veil/data_structures/alphabet.dart';
 // Local
 // Pages
 import 'package:veil/pages/page_cipher.dart';
+import 'package:veil/pages/page_digram_table.dart';
+
+// Styles
+import 'package:veil/styles/styles.dart';
 
 // Data Structures
 import 'package:veil/data_structures/cryptext.dart';
-import 'package:veil/pages/page_digram_table.dart';
+import 'package:veil/data_structures/break_method.dart';
 
-import '../data_structures/break_method.dart';
-import '../functions/cipher_substitution.dart';
-import '../functions/digram.dart';
-import '../functions/frequency.dart';
-import '../styles/styles.dart';
-import '../widgets/alphabet_editor.dart';
-import '../widgets/cipher_substitution/permutation_entry.dart';
-import '../widgets/my_horizontal_scrollable.dart';
-import '../widgets/my_text_button.dart';
+// Functions
+import 'package:veil/functions/cipher_substitution.dart';
+import 'package:veil/functions/digram.dart';
+import 'package:veil/functions/frequency.dart';
+
+// Widgets
+import 'package:veil/widgets/alphabet_editor.dart';
+import 'package:veil/widgets/cipher_substitution/permutation_entry.dart';
+import 'package:veil/widgets/my_horizontal_scrollable.dart';
+import 'package:veil/widgets/my_text_button.dart';
 
 class PageCipherSubstitution extends PageCipher {
   PageCipherSubstitution({
