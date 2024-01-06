@@ -96,55 +96,57 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> {
 
           String digramTableString = digramTable(widget.ciphertext, freqSorted.take(10).map((entry) => entry.key).toList());
 
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 130,
-                child: Column(
-                  children: [
-                    MyTextButton(
-                      text: 'Large View',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => PageDigramTable(text: widget.ciphertext),
-                            transitionDuration: Duration(milliseconds: 100),
-                            reverseTransitionDuration: Duration(milliseconds: 100),
-                            transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
-                          )
-                        );
-                      }
-                    ),
-                    SizedBox(height: 10),
-                    MyTextButton(
-                      text: 'Common',
-                      onTap: () {
-                        setState(() {
-                          breakCommonFirst = true;
-                        });
-                      }
-                    ),
-                    SizedBox(height: 10),
-                    MyTextButton(
-                      text: 'Uncommon',
-                      onTap: () {
-                        setState(() {
-                          breakCommonFirst = false;
-                        });
-                      }
-                    ),
-                  ],
+          return Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 130,
+                  child: Column(
+                    children: [
+                      MyTextButton(
+                        text: 'Large View',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => PageDigramTable(text: widget.ciphertext),
+                              transitionDuration: Duration(milliseconds: 100),
+                              reverseTransitionDuration: Duration(milliseconds: 100),
+                              transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                            )
+                          );
+                        }
+                      ),
+                      SizedBox(height: 10),
+                      MyTextButton(
+                        text: 'Common',
+                        onTap: () {
+                          setState(() {
+                            breakCommonFirst = true;
+                          });
+                        }
+                      ),
+                      SizedBox(height: 10),
+                      MyTextButton(
+                        text: 'Uncommon',
+                        onTap: () {
+                          setState(() {
+                            breakCommonFirst = false;
+                          });
+                        }
+                      ),
+                    ],
+                  ),
                 ),
-              ),
 
-              SizedBox(width: 25),
-              Text(
-                digramTableString,
-                style: CustomStyle.bodyLargeTextMono,
-              ),
-            ],
+                SizedBox(width: 25),
+                Text(
+                  digramTableString,
+                  style: CustomStyle.bodyLargeTextMono,
+                ),
+              ],
+            ),
           );
         }
       ),
@@ -272,6 +274,7 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> {
   @override
   Widget build(BuildContext context) {
     return widget.pageFromSectionsDefaultBreakSectionCombinedED(
+      defaultBreakHeight: 315,
       cryptSection: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
