@@ -110,7 +110,7 @@ class Cryptext {
   }
 
   /// Uses the String Cipher extension functions to split the text into chunks.
-  List<String> chunks(int numChunks) {
+  Iterable<String> chunks(int numChunks) {
     return lettersAsString.chunks(numChunks);
   }
 
