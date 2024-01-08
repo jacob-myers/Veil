@@ -1,5 +1,6 @@
 import 'package:collection/equality.dart';
 import 'package:veil/data_structures/alphabet.dart';
+import 'package:veil/functions/string_manip.dart';
 
 class Cryptext {
   List<String> _letters = [];
@@ -106,6 +107,16 @@ class Cryptext {
   /// How many characters are in the text.
   int get length {
     return letters.length;
+  }
+
+  /// Uses the String Cipher extension functions to split the text into chunks.
+  List<String> chunks(int numChunks) {
+    return lettersAsString.chunks(numChunks);
+  }
+
+  /// Returns a deep copy of self.
+  Cryptext deepCopy() {
+    return Cryptext(letters: letters.toList(), alphabet: alphabet.deepCopy());
   }
 
   /// Gets invalid letters too.

@@ -71,9 +71,19 @@ class Alphabet {
     return letters.length;
   }
 
+  /// The index of the letter in the alphabet.
+  int indexOf(String element) {
+    return letters.indexOf(element);
+  }
+
   /// Mods the int value to put it in the alphabet's space
   int mod(int c) {
     return c % length;
+  }
+
+  /// Returns a deep copy of self.
+  Alphabet deepCopy() {
+    return Alphabet(letters: letters.toList());
   }
 
   @override
