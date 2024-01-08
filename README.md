@@ -88,7 +88,7 @@ For each pair, find the letters on the array and follow the following rules to f
 
 	- For example, 'HI' in the following keyarray encrypts to 'BM'. 
 
-![Playfair Example] (/assets/readme/playfair_demo.png)
+![Playfair Example](assets/readme/playfair_demo.png)
 
 Decryption is the same process but reversed.
 
