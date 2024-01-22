@@ -77,7 +77,9 @@ class _PageCipherViginere extends State<PageCipherViginere> {
                 keyword: keyword,
                 alphabet: widget.alphabet,
                 setKeyword: (Cryptext? newKeyword) {
-                  keyword = newKeyword ?? keyword;
+                  setState(() {
+                    keyword = newKeyword ?? keyword;
+                  });
                 },
               ),
             ),
