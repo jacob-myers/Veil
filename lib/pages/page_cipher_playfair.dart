@@ -86,6 +86,7 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child:KeywordEntry(
