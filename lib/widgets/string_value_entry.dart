@@ -6,6 +6,7 @@ import 'package:veil/data_structures/alphabet.dart';
 // Styles
 import 'package:veil/styles/styles.dart';
 import 'package:veil/widgets/my_text_button.dart';
+import 'package:veil/widgets/value_entry.dart';
 
 // On lose/gain focus: https://stackoverflow.com/questions/47965141/how-to-listen-focus-change-in-flutter
 
@@ -17,6 +18,10 @@ class StringValueEntry extends StatefulWidget {
   final bool showResetButton;
   final String defaultValue;
   final String value;
+  final TextStyle? style;
+  final EdgeInsetsGeometry? padding;
+  final TextAlign? textAlign;
+  final BorderRadius? borderRadius;
 
   const StringValueEntry({
     super.key,
@@ -27,12 +32,37 @@ class StringValueEntry extends StatefulWidget {
     this.showResetButton = false,
     this.defaultValue = "",
     this.value = "",
+    this.style,
+    this.padding,
+    this.textAlign,
+    this.borderRadius,
   });
 
   @override
   State<StringValueEntry> createState() => _StringValueEntry();
 }
 
+class _StringValueEntry extends State<StringValueEntry> {
+  @override
+  Widget build(BuildContext context) {
+    return ValueEntry(
+      title: widget.title,
+      onChanged: widget.onChanged,
+      hintText: widget.hintText,
+      errorText: widget.errorText,
+      defaultValue: widget.defaultValue,
+      defaultValueShowsAsBlank: false,
+      showResetButton: widget.showResetButton,
+      value: widget.value,
+      style: widget.style,
+      padding: widget.padding,
+      textAlign: widget.textAlign,
+      borderRadius: widget.borderRadius,
+    );
+  }
+}
+
+/*
 class _StringValueEntry extends State<StringValueEntry> {
   FocusNode focusNode = FocusNode();
   TextEditingController textFieldController = TextEditingController();
@@ -55,7 +85,7 @@ class _StringValueEntry extends State<StringValueEntry> {
       children: [
         widget.title != null ? Text(widget.title!, style: CustomStyle.headers) : Container(),
 
-        SizedBox(height: 10),
+        widget.title != null ? SizedBox(height: 10) : Container(),
 
         Focus(
           child: Row(
@@ -63,7 +93,8 @@ class _StringValueEntry extends State<StringValueEntry> {
             children: [
               Flexible(
                 child: TextField(
-                    style: CustomStyle.textFieldEntry,
+                    style: widget.style ?? CustomStyle.textFieldEntry,
+                    textAlign: widget.textAlign ?? TextAlign.left,
 
                     keyboardType: TextInputType.text,
 
@@ -76,11 +107,14 @@ class _StringValueEntry extends State<StringValueEntry> {
                     // Styling.
                     cursorColor: CustomStyle.pageScheme.onPrimary,
                     decoration: InputDecoration(
+                      contentPadding: widget.padding,
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(color: CustomStyle.pageScheme.onPrimary, width: 1)
+                        borderSide: BorderSide(color: CustomStyle.pageScheme.onPrimary, width: 1),
+                        borderRadius: widget.borderRadius ?? const BorderRadius.all(Radius.circular(4.0)),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: CustomStyle.pageScheme.onPrimary, width: 1)
+                        borderSide: BorderSide(color: CustomStyle.pageScheme.onPrimary, width: 1),
+                        borderRadius: widget.borderRadius ?? const BorderRadius.all(Radius.circular(4.0)),
                       ),
                       errorText: hideError && widget.errorText == null ? null : widget.errorText,
                       hintText: widget.hintText,
@@ -98,7 +132,7 @@ class _StringValueEntry extends State<StringValueEntry> {
                 ),
               ),
 
-              SizedBox(height: 10),
+              //widget.showResetButton ? SizedBox(height: 10) : Container(),
 
               widget.showResetButton ? getResetButton() : Container(),
 
@@ -133,3 +167,4 @@ class _StringValueEntry extends State<StringValueEntry> {
     );
   }
 }
+*/

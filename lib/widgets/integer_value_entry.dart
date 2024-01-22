@@ -5,6 +5,7 @@ import 'package:veil/data_structures/alphabet.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
+import 'package:veil/widgets/value_entry.dart';
 
 // On lose/gain focus: https://stackoverflow.com/questions/47965141/how-to-listen-focus-change-in-flutter
 
@@ -13,8 +14,13 @@ class IntegerValueEntry extends StatefulWidget {
   final String? title;
   final String hintText;
   final String? errorText;
+  final bool showResetButton;
   final int defaultValue;
   final int value;
+  final TextStyle? style;
+  final EdgeInsetsGeometry? padding;
+  final TextAlign? textAlign;
+  final BorderRadius? borderRadius;
 
   const IntegerValueEntry({
     super.key,
@@ -22,14 +28,79 @@ class IntegerValueEntry extends StatefulWidget {
     this.title,
     this.hintText = 'Enter a value...',
     this.errorText,
+    this.showResetButton = false,
     this.defaultValue = 0,
     this.value = 0,
+    this.style,
+    this.padding,
+    this.textAlign,
+    this.borderRadius,
   });
 
   @override
   State<IntegerValueEntry> createState() => _IntegerValueEntry();
 }
 
+class _IntegerValueEntry extends State<IntegerValueEntry> {
+  bool hideError = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: ValueEntry(
+            title: widget.title,
+            onChanged: widget.onChanged,
+            hintText: widget.hintText,
+            errorText: widget.errorText,
+            defaultValue: widget.defaultValue.toString(),
+            defaultValueShowsAsBlank: true,
+            showResetButton: widget.showResetButton,
+            value: widget.value.toString(),
+            style: widget.style,
+            padding: widget.padding,
+            textAlign: widget.textAlign,
+            borderRadius: widget.borderRadius,
+            contentRightOfTextEntry: Row(
+              children: [
+                SizedBox(width: 4),
+                Column(
+                  children: [
+                    InkWell(
+                      child: const Icon(
+                        Icons.arrow_drop_up_outlined,
+                        size: 30,
+                      ),
+                      onTap: () {
+                        hideError = false;
+                        widget.onChanged((widget.value + 1).toString());
+                      },
+                    ),
+                    SizedBox(height: 2,),
+                    InkWell(
+                      child: const Icon(
+                        Icons.arrow_drop_down_outlined,
+                        size: 30,
+                      ),
+                      onTap: () {
+                        hideError = false;
+                        widget.onChanged((widget.value - 1).toString());
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/*
 class _IntegerValueEntry extends State<IntegerValueEntry> {
   FocusNode focusNode = FocusNode();
   TextEditingController textFieldController = TextEditingController();
@@ -142,3 +213,4 @@ class _IntegerValueEntry extends State<IntegerValueEntry> {
     );
   }
 }
+*/
