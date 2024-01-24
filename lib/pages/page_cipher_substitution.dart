@@ -332,18 +332,29 @@ class _PageCipherSubstitution extends State<PageCipherSubstitution> {
 
             // Right Column.
             Expanded(
-                child: AlphabetEditor(
-                  title: "Instance alphabet",
-                  alphabet: widget.alphabet,
-                  defaultAlphabet: widget.defaultAlphabet,
-                  setAlphabet: (Alphabet newAlphabet) {
-                    setState(() {
-                      widget.alphabet = newAlphabet;
-                      setPerm(permutation, permutationInput);
-                    });
-                  },
-                  showResetButton: true,
-                )
+              child: AlphabetEditor(
+                title: "Instance alphabet",
+                alphabet: widget.alphabet,
+                defaultAlphabet: widget.defaultAlphabet,
+                setAlphabet: (Alphabet newAlphabet) {
+                  setState(() {
+                    // Finds which characters were added, and which were removed.
+                    List<String> newChars = newAlphabet.letters.toSet().difference(widget.alphabet.letters.toSet()).toList();
+                    List<String> removedChars = widget.alphabet.letters.toSet().difference(newAlphabet.letters.toSet()).toList();
+
+                    // Adds new characters to the permutation as mapping to themselves.
+                    permutation.addAll(newChars);
+
+                    // Removes the removed characters from wherever they are in the current permutation.
+                    permutation = permutation.map((e) => e = e.replaceAllMapped(RegExp('[${removedChars.join()}]'), (match) => "" )).toList();
+                    permutation.remove('');
+
+                    widget.alphabet = newAlphabet;
+                    setPerm(permutation, permutationInput);
+                  });
+                },
+                showResetButton: true,
+              )
             ),
           ],
         ),
