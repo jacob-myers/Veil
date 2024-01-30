@@ -25,6 +25,7 @@ class PageCipherADFGVX extends PageCipher {
 
 class _PageCipherADFGVX extends State<PageCipherADFGVX> {
   List<String> ciphertextChars = ['A', 'D', 'F', 'G', 'V', 'X'];
+  List<String> defaultChars = ['A', 'D', 'F', 'G', 'V', 'X'];
   late List<List<String?>> keyarray;
 
   void callSetState() {
@@ -54,11 +55,15 @@ class _PageCipherADFGVX extends State<PageCipherADFGVX> {
       // Grows or shrinks the existing keyarray as to not reset data each time.
       while (keyarray.length > ciphertextChars.length) {
         keyarray.removeLast();
-        for (var element in keyarray) { element.removeLast(); }
+        for (var element in keyarray) {
+          element.removeLast();
+        }
       }
       while (keyarray.length < ciphertextChars.length) {
         keyarray.add(List.generate(keyarray.length, (index) => null));
-        for (var element in keyarray) { element.add(null); }
+        for (var element in keyarray) {
+          element.add(null);
+        }
       }
     });
   }
@@ -81,6 +86,8 @@ class _PageCipherADFGVX extends State<PageCipherADFGVX> {
                       setCiphertextChars(str.split(""));
                     },
                     value: ciphertextChars.join(),
+                    defaultValue: defaultChars.join(),
+                    showResetButton: true,
                   ),
 
                   SizedBox( height: 15 ),
@@ -90,7 +97,7 @@ class _PageCipherADFGVX extends State<PageCipherADFGVX> {
                     colTitles: ciphertextChars,
                     values: keyarray,
                     onValueChange: (String str) { setState(() {}); },
-                  )
+                  ),
 
                 ],
               ),
