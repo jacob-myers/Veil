@@ -8,12 +8,14 @@ import 'package:veil/widgets/string_value_entry.dart';
 class KeywordEntry extends StatefulWidget {
   final Alphabet alphabet;
   final Function(Cryptext?) setKeyword;
+  final bool showResetButton;
   Cryptext keyword;
 
   KeywordEntry({
     super.key,
     required this.alphabet,
     required this.setKeyword,
+    this.showResetButton = false,
     Cryptext? keyword,
   })
   : keyword = keyword ?? Cryptext();
@@ -32,6 +34,7 @@ class _KeywordEntry extends State<KeywordEntry> {
       hintText: "Enter a keyword...",
       errorText: keywordError,
       value: widget.keyword.lettersAsString,
+      showResetButton: widget.showResetButton,
       onChanged: (String val) {
         setState(() {
           Cryptext newKeyWord = Cryptext.fromString(val, alphabet: widget.alphabet);
