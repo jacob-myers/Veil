@@ -5,6 +5,9 @@ import 'package:veil/data_structures/alphabet.dart';
 // Pages
 import 'package:veil/pages/page_cipher.dart';
 
+// Styles
+import 'package:veil/styles/styles.dart';
+
 // Data Structures
 import 'package:veil/data_structures/cryptext.dart';
 
@@ -28,6 +31,7 @@ class PageCipherPlayfair extends PageCipher {
 }
 
 class _PageCipherPlayfair extends State<PageCipherPlayfair> {
+  String visual = "";
   late Cryptext keyword;
 
   void callSetState() {
@@ -49,7 +53,7 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
         try {
           widget.ciphertext = playfairEncrypt(Cryptext(letters: widget.plaintext.lettersInAlphabet, alphabet: widget.alphabet), keyword);
         } catch (e) {
-          print(e);
+          //print(e);
           widget.ciphertext = widget.plaintext;
         }
       })
@@ -66,7 +70,7 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
         try {
           widget.plaintext = playfairDecrypt(Cryptext(letters: lettersToUse, alphabet: widget.alphabet), keyword);
         } catch (e) {
-          print(e);
+          //print(e);
           widget.plaintext = widget.ciphertext;
         }
       })
@@ -75,6 +79,8 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
 
   @override
   Widget build(BuildContext context) {
+    visual = buildPlayfairMatrixVisual(keyword);
+
     return widget.pageFromSectionsDefaultBreakSectionCombinedED(
       callSetState: callSetState,
       cryptSection: IntrinsicHeight(
@@ -110,6 +116,27 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
                           title: "Keyword Length",
                         ),
                       ),
+                    ],
+                  ),
+
+                  SizedBox(height: 10),
+
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Key Matrix",
+                            style: CustomStyle.headers,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            visual,
+                            style: CustomStyle.bodyLargeTextMono,
+                          ),
+                        ],
+                      )
                     ],
                   )
                 ],

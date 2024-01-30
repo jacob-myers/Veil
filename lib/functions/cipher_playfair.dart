@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/cryptext.dart';
 import 'package:tuple/tuple.dart';
@@ -48,6 +50,11 @@ Map<String, Tuple2<int, int>> buildKeyarray(Alphabet a, Cryptext keyword) {
     }
   }
   return keyarray;
+}
+
+/// Reverses the given keyarray. Pulled up for simplicity.
+Map<Tuple2<int, int>, String> buildKeyArrayRev(Map<String, Tuple2<int, int>> keyarray) {
+  return Map.fromEntries(keyarray.entries.map((e) => MapEntry(e.value, e.key)));
 }
 
 /// Formats the plaintext as letter pairs, using the padding characters where needed.
@@ -143,8 +150,7 @@ Cryptext playfairEncrypt(Cryptext plaintext, Cryptext keyword, [String padChar =
 
   // Build the keyarray and reversed keyarray.
   Map<String, Tuple2<int, int>> keyarray = buildKeyarray(a, keyword);
-  Map<Tuple2<int, int>, String> keyarrayRev = Map.fromEntries(
-      keyarray.entries.map((e) => MapEntry(e.value, e.key)));
+  Map<Tuple2<int, int>, String> keyarrayRev = buildKeyArrayRev(keyarray);
 
   // Build the list of letter pairs.
   List<String> plaintextPairs = buildPlaintextPairs(plaintext, padChar, padCharPadChar);
@@ -184,6 +190,22 @@ Cryptext playfairDecrypt(Cryptext ciphertext, Cryptext keyword) {
   return Cryptext.fromString(output.join(""), alphabet: ciphertext.alphabet);
 }
 
+/// Builds a visual of the keyarray matrix, returns as a String.
+String buildPlayfairMatrixVisual(Cryptext keyword) {
+  var revKeyArray = buildKeyArrayRev(buildKeyarray(keyword.alphabet, keyword));
+  int sideLen = sqrt(revKeyArray.keys.length).floor(); // Will always be whole because square matrix.
+
+  String matrix = "";
+  for (int i = 0; i < sideLen; i++) {
+    for (int j = 0; j < sideLen; j++) {
+      matrix += "${revKeyArray[Tuple2(i, j)]!} ";
+    }
+    matrix += "\n";
+  }
+
+  return matrix;
+}
+
 
 
 void main() {
@@ -195,4 +217,6 @@ void main() {
 
   Cryptext plaintextFromCiphertext = playfairDecrypt(ciphertext, keyword);
   print(plaintextFromCiphertext);
+
+  print(buildPlayfairMatrixVisual(keyword));
 }
