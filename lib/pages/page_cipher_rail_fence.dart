@@ -48,7 +48,7 @@ class _PageCipherRailFence extends State<PageCipherRailFence> {
         cryptext.alphabet = widget.alphabet;
         widget.plaintext = cryptext;
         widget.ciphertext = railFenceEncrypt(widget.plaintext, numRails, offset);
-        visual = buildRailMatrixVisual(widget.plaintext, numRails, offset);
+        //visual = buildRailMatrixVisual(widget.plaintext, numRails, offset);
       })
     });
     widget.initSetCiphertextThenPlaintext((Cryptext cryptext) => {
@@ -56,7 +56,7 @@ class _PageCipherRailFence extends State<PageCipherRailFence> {
         cryptext.alphabet = widget.alphabet;
         widget.ciphertext = cryptext;
         widget.plaintext = railFenceDecrypt(widget.ciphertext, numRails, offset);
-        visual = buildRailMatrixVisual(widget.plaintext, numRails, offset);
+        //visual = buildRailMatrixVisual(widget.plaintext, numRails, offset);
       })
     });
 
