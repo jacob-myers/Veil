@@ -24,6 +24,7 @@ class PageCipherADFGVX extends PageCipher {
 }
 
 class _PageCipherADFGVX extends State<PageCipherADFGVX> {
+  int cipherTextCharactersMax = 10;
   List<String> ciphertextChars = ['A', 'D', 'F', 'G', 'V', 'X'];
   List<String> defaultChars = ['A', 'D', 'F', 'G', 'V', 'X'];
   late List<List<String?>> keyarray;
@@ -83,7 +84,11 @@ class _PageCipherADFGVX extends State<PageCipherADFGVX> {
 
                   StringValueEntry(
                     onChanged: (String str) {
-                      setCiphertextChars(str.split(""));
+                      if (str.length > cipherTextCharactersMax) {
+                        setCiphertextChars(str.substring(0, cipherTextCharactersMax).split(""));
+                      } else {
+                        setCiphertextChars(str.split(""));
+                      }
                     },
                     value: ciphertextChars.join(),
                     defaultValue: defaultChars.join(),
