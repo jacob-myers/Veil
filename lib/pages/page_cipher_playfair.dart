@@ -98,6 +98,7 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
                         child:KeywordEntry(
                           keyword: keyword,
                           alphabet: widget.alphabet,
+                          showResetButton: true,
                           setKeyword: (Cryptext? cryptext) => {
                             setState(() {
                               keyword = cryptext ?? Cryptext(alphabet: widget.alphabet);
