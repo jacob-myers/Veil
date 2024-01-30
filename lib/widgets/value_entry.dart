@@ -105,7 +105,7 @@ class _ValueEntry extends State<ValueEntry> {
               children: [
                 SizedBox(width: 10),
                 MyTextButton(
-                  height: 54,
+                  height: 61,
                   text: "Reset",
                   onTap: () { widget.onChanged(widget.defaultValue); }
                 )
