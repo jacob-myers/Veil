@@ -152,7 +152,7 @@ class _PageCipherAffine extends State<PageCipherAffine> {
                             a: a,
                           ),
                         ),
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: BEntry(
                             alphabet: widget.alphabet,
@@ -162,7 +162,7 @@ class _PageCipherAffine extends State<PageCipherAffine> {
                             b: b,
                           ),
                         ),
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
 
                         SizedBox(
                           width: 70,
