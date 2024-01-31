@@ -55,6 +55,12 @@ class CustomStyle {
     fontSize: 20,
   );
 
+  static TextStyle bodyError = TextStyle(
+    color: pageScheme.error,
+    fontFamily: 'JetBrainsMono',
+    fontSize: 14,
+  );
+
   static Color disabledTextEntryBorderColor = const Color(0xFF4E4E4E);
   static Color normalBlue = const Color(0xFF40B4F2);
 
