@@ -6,6 +6,7 @@ import 'package:veil/widgets/my_text_button.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
+import 'package:veil/widgets/string_value_entry.dart';
 
 class AlphabetEditor extends StatefulWidget {
   Alphabet alphabet;
@@ -14,6 +15,7 @@ class AlphabetEditor extends StatefulWidget {
   final String? title;
   final bool showDefaultButtons;
   final bool showResetButton;
+  final bool showAlphabetLength;
 
   AlphabetEditor({
     super.key,
@@ -23,6 +25,7 @@ class AlphabetEditor extends StatefulWidget {
     this.title,
     this.showDefaultButtons = false,
     this.showResetButton = false,
+    this.showAlphabetLength = true,
   })
   : defaultAlphabet = defaultAlphabet ?? alphabet;
 
@@ -31,49 +34,22 @@ class AlphabetEditor extends StatefulWidget {
 }
 
 class _AlphabetEditor extends State<AlphabetEditor> {
-  late TextEditingController controller;
   int? oldOffsetFromEnd;
 
   @override
   Widget build(BuildContext context) {
-    controller = TextEditingController(text: widget.alphabet.lettersAsString);
-    if (oldOffsetFromEnd != null) {
-      controller.selection = TextSelection.collapsed(offset: controller.text.length - oldOffsetFromEnd!);
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
 
-        getTitle(),
+        widget.title == null ? Container() : Text(widget.title!, style: CustomStyle.headers),
+        widget.title == null ? Container() : const SizedBox(height: 10),
 
-        TextField(
-          style: CustomStyle.textFieldEntry,
-          controller: controller,
-
-          keyboardType: TextInputType.text,
-
-          textInputAction: TextInputAction.done,
-          maxLines: null,
-
-          // Styling.
-          cursorColor: CustomStyle.pageScheme.onPrimary,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: CustomStyle.pageScheme.onPrimary, width: 1)
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: CustomStyle.pageScheme.onPrimary, width: 1)
-            ),
-            hintText: 'Enter an alphabet...',
-          ),
-
-          // When Enter is pressed.
-          onSubmitted: (String str) {},
-
-          // When the text is changed.
+        StringValueEntry(
+          value: widget.alphabet.lettersAsString,
+          hintText: "Enter an alphabet...",
           onChanged: (String str) {
-            oldOffsetFromEnd = controller.text.length - controller.selection.base.offset;
             if (Alphabet.strIsValidAlphabet(str)) {
               // Changes are valid, set alphabet and update.
               widget.setAlphabet(Alphabet.fromString(letters: str));
@@ -83,77 +59,46 @@ class _AlphabetEditor extends State<AlphabetEditor> {
                 return;
               });
             }
-          }
+          },
         ),
 
-        getButtons(),
+        Column(
+          children: [
+            hasButtons() ? const SizedBox(height: 10) : Container(),
 
-      ],
-    );
-  }
+            Row(
+              children: [
+                !widget.showResetButton ? Container() : MyTextButton(
+                    text: 'Reset to my default',
+                    onTap: () {
+                      widget.setAlphabet(widget.defaultAlphabet);
+                    }
+                ),
+                !widget.showResetButton ? Container() : const SizedBox(width: 10),
 
-  Widget getTitle() {
-    if (widget.title != null) {
-      return Column(
-        children: [
-          Text(widget.title!, style: CustomStyle.headers),
-          SizedBox(height: 10),
-        ],
-      );
-    }
-    return Container();
-  }
+                !widget.showDefaultButtons ? Container() : MyTextButton(
+                    text: 'Uppercase English',
+                    onTap: () {
+                      widget.setAlphabet(Alphabet());
+                    }
+                ),
+                !widget.showDefaultButtons ? Container() : const SizedBox(width: 10),
 
-  Widget getButtons() {
-    List<Widget> children = [];
-    children += getResetButton();
-    children += getDefaultAlphabetButtons();
-
-    return Column(
-      children: [
-        SizedBox(height: 10),
-        Row(
-          children: children,
+                !widget.showDefaultButtons ? Container() : MyTextButton(
+                    text: 'Lowercase English',
+                    onTap: () {
+                      widget.setAlphabet(Alphabet.fromString(letters: 'abcdefghijklmnopqrstuvwxyz'));
+                    }
+                ),
+              ],
+            )
+          ],
         )
       ],
     );
   }
 
-  List<Widget> getResetButton() {
-    if (widget.showResetButton) {
-      return [
-        MyTextButton(
-          text: 'Reset to my default',
-          onTap: () {
-            widget.setAlphabet(widget.defaultAlphabet);
-          }
-        ),
-      ];
-    } else {
-      return [Container()];
-    }
-  }
-
-  List<Widget> getDefaultAlphabetButtons() {
-    if (widget.showDefaultButtons) {
-      return [
-        MyTextButton(
-            text: 'Uppercase English',
-            onTap: () {
-              widget.setAlphabet(Alphabet());
-            }
-        ),
-
-        SizedBox(width: 10),
-
-        MyTextButton(
-            text: 'Lowercase English',
-            onTap: () {
-              widget.setAlphabet(Alphabet.fromString(letters: 'abcdefghijklmnopqrstuvwxyz'));
-            }
-        ),
-      ];
-    }
-    return [Container()];
+  bool hasButtons() {
+    return widget.showDefaultButtons || widget.showResetButton;
   }
 }
