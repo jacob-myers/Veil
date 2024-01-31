@@ -152,8 +152,6 @@ class _PageCipherADFGVX extends State<PageCipherADFGVX> {
                                     }
                                   });
                                 });
-
-
                               }
                           ),
                           SizedBox(width: 10),
