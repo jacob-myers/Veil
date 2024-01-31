@@ -165,9 +165,9 @@ class _PageCipherAffine extends State<PageCipherAffine> {
                         const SizedBox(width: 20),
 
                         SizedBox(
-                          width: 150,
+                          width: 70,
                           child: DisabledTextDisplay(
-                            title: "Alphabet Space",
+                            title: "Range",
                             content: widget.alphabet.length.toString()
                           ),
                         ),
