@@ -18,6 +18,7 @@ class GridEditable extends StatefulWidget {
   List<String> rowTitles;
   List<List<String?>> values;
   Function(String) onValueChange;
+  int? charLimit;
 
   GridEditable({
     super.key,
@@ -26,6 +27,7 @@ class GridEditable extends StatefulWidget {
     required this.rowTitles,
     required this.values,
     required this.onValueChange,
+    this.charLimit
   });
 
   @override
@@ -47,11 +49,11 @@ class _GridEditable extends State<GridEditable> {
             Expanded(
               child: Row(
                 children: List.generate(colCount, (index) => Expanded(
-                    child: Text(
-                      widget.colTitles[index],
-                      style: CustomStyle.bodyLargeText,
-                      textAlign: TextAlign.center,
-                    ))
+                  child: Text(
+                    widget.colTitles[index],
+                    style: CustomStyle.bodyLargeText,
+                    textAlign: TextAlign.center,
+                  ))
                 ),
               ),
             )
@@ -82,6 +84,11 @@ class _GridEditable extends State<GridEditable> {
                       value: widget.values[index_r][index_c] ?? "",
                       onChanged: (String str) {
                         setState(() {
+                          if (widget.charLimit != null) {
+                            if (str.length > widget.charLimit!) {
+                              str = str.substring(0, widget.charLimit);
+                            }
+                          }
                           widget.values[index_r][index_c] = str;
                           widget.onValueChange(str);
                         });
