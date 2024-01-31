@@ -94,7 +94,7 @@ class _PageCipherRailFence extends State<PageCipherRailFence> {
                         ),
                       ),
 
-                      SizedBox(width: 20),
+                      SizedBox(width: 10),
 
                       Expanded(
                         child: OffsetEntry(
@@ -108,11 +108,12 @@ class _PageCipherRailFence extends State<PageCipherRailFence> {
                         ),
                       ),
 
-                      SizedBox(width: 20),
+                      SizedBox(width: 10),
 
-                      Expanded(
+                      SizedBox(
+                        width: 120,
                         child: DisabledTextDisplay(
-                            title: "Offset Space",
+                            title: "Offset Range",
                             content: getOffsetSpace(numRails).toString()
                         ),
                       ),
