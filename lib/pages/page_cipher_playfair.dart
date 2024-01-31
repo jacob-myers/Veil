@@ -33,6 +33,7 @@ class PageCipherPlayfair extends PageCipher {
 class _PageCipherPlayfair extends State<PageCipherPlayfair> {
   String visual = "";
   late Cryptext keyword;
+  bool alphabetLengthValid = true;
 
   void callSetState() {
     setState(() {});
@@ -79,7 +80,12 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
 
   @override
   Widget build(BuildContext context) {
-    visual = buildPlayfairMatrixVisual(keyword);
+    alphabetLengthValid = widget.alphabet.length == 25;
+    try {
+      visual = buildPlayfairMatrixVisual(keyword);
+    } catch (e) {
+      visual = "";
+    }
 
     return widget.pageFromSectionsDefaultBreakSectionCombinedED(
       callSetState: callSetState,
@@ -91,6 +97,13 @@ class _PageCipherPlayfair extends State<PageCipherPlayfair> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
+                  alphabetLengthValid ? Container() : Text(
+                    "* Error: Alphabet Length: ${widget.alphabet.length} (Must be 25).",
+                    style: CustomStyle.bodyError,
+                  ),
+                  alphabetLengthValid ? Container() : SizedBox(height: 10),
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
