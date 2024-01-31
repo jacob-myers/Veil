@@ -173,7 +173,8 @@ class _PageCipherShift extends State<PageCipherShift> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
+                      SizedBox(
+                        width: 230,
                         child: ShiftAmountEntry(
                             alphabet: widget.alphabet,
                             setShift: (int? newShift) {
@@ -185,11 +186,12 @@ class _PageCipherShift extends State<PageCipherShift> {
                         ),
                       ),
 
-                      SizedBox(width: 20),
+                      SizedBox(width: 10),
 
-                      Expanded(
+                      SizedBox(
+                        width: 70,
                         child: DisabledTextDisplay(
-                            title: "Alphabet Space",
+                            title: "Range",
                             content: widget.alphabet.length.toString()
                         ),
                       ),

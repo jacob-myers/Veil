@@ -32,7 +32,7 @@ class _ShiftAmountEntry extends State<ShiftAmountEntry> {
   Widget build(BuildContext context) {
     return IntegerValueEntry(
       title: 'Shift of plaintext (k)',
-      hintText: 'Enter a shift...',
+      hintText: 'Enter shift...',
       errorText: shiftAmountError,
       value: widget.shift,
       onChanged: (String str) {
