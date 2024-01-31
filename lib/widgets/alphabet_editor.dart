@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // Local
 import 'package:veil/data_structures/alphabet.dart';
+import 'package:veil/widgets/disabled_text_display.dart';
 import 'package:veil/widgets/my_text_button.dart';
 
 // Styles
@@ -42,24 +43,40 @@ class _AlphabetEditor extends State<AlphabetEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: StringValueEntry(
+                  title: widget.title,
+                  value: widget.alphabet.lettersAsString,
+                  hintText: "Enter an alphabet...",
+                  onChanged: (String str) {
+                    if (Alphabet.strIsValidAlphabet(str)) {
+                      // Changes are valid, set alphabet and update.
+                      widget.setAlphabet(Alphabet.fromString(letters: str));
+                    } else {
+                      // Deletes changes, resets to alphabet because changes were invalid.
+                      setState(() {
+                        return;
+                      });
+                    }
+                  },
+                ),
+              ),
 
-        widget.title == null ? Container() : Text(widget.title!, style: CustomStyle.headers),
-        widget.title == null ? Container() : const SizedBox(height: 10),
+              !widget.showAlphabetLength ? Container() : const SizedBox(width: 10),
+              !widget.showAlphabetLength ? Container() : SizedBox(
+                width: 70,
+                child: DisabledTextDisplay(
+                  title: "Length",
+                  content: widget.alphabet.length.toString(),
+                ),
+              ),
 
-        StringValueEntry(
-          value: widget.alphabet.lettersAsString,
-          hintText: "Enter an alphabet...",
-          onChanged: (String str) {
-            if (Alphabet.strIsValidAlphabet(str)) {
-              // Changes are valid, set alphabet and update.
-              widget.setAlphabet(Alphabet.fromString(letters: str));
-            } else {
-              // Deletes changes, resets to alphabet because changes were invalid.
-              setState(() {
-                return;
-              });
-            }
-          },
+            ],
+          ),
         ),
 
         Column(
