@@ -28,7 +28,7 @@ class PageCipherViginere extends PageCipher {
 }
 
 class _PageCipherViginere extends State<PageCipherViginere> {
-  Cryptext keyword = Cryptext();
+  late Cryptext keyword;
 
   void callSetState() {
     setState(() {});
@@ -37,6 +37,8 @@ class _PageCipherViginere extends State<PageCipherViginere> {
   @override
   void initState() {
     super.initState();
+    keyword = Cryptext(alphabet: widget.alphabet);
+
     widget.initSetPlaintextThenCiphertext((Cryptext cryptext) => {
       setState(() {
         cryptext.alphabet = widget.alphabet;
