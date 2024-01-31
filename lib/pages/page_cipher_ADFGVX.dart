@@ -1,21 +1,27 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:math';
 
 // Local
 // Pages
 import 'package:veil/pages/page_cipher.dart';
 
+// Styles
+import 'package:veil/styles/styles.dart';
+
 // Data Structures
 import 'package:veil/data_structures/cryptext.dart';
-import 'package:veil/styles/styles.dart';
+import 'package:veil/data_structures/alphabet.dart';
+
+// Functions
+import 'package:veil/functions/cipher_ADFGVX.dart';
+
+// Widgets
 import 'package:veil/widgets/grid_editable.dart';
+import 'package:veil/widgets/keyword_entry.dart';
 import 'package:veil/widgets/my_text_button.dart';
 import 'package:veil/widgets/string_value_entry.dart';
-
-import '../data_structures/alphabet.dart';
-import '../widgets/alphabet_editor.dart';
+import 'package:veil/widgets/alphabet_editor.dart';
 
 class PageCipherADFGVX extends PageCipher {
   PageCipherADFGVX({
@@ -33,6 +39,7 @@ class _PageCipherADFGVX extends State<PageCipherADFGVX> {
   List<String> ciphertextChars = ['A', 'D', 'F', 'G', 'V', 'X'];
   List<String> defaultChars = ['A', 'D', 'F', 'G', 'V', 'X'];
   late List<List<String?>> keyarray;
+  late Cryptext keyword;
   bool alphabetLengthMatch = true;
   var random = Random();
 
@@ -47,18 +54,40 @@ class _PageCipherADFGVX extends State<PageCipherADFGVX> {
   @override
   void initState() {
     super.initState();
-    widget.initSetPlaintextThenCiphertext((Cryptext cryptext) => {
+    keyarray = getEmptyKeyArray();
+    keyword = Cryptext(alphabet: widget.alphabet);
 
+    widget.initSetPlaintextThenCiphertext((Cryptext cryptext) {
+      setState(() {
+        widget.plaintext = cryptext;
+        widget.plaintext.alphabet = widget.alphabet;
+
+        //print
+        try {
+          List<List<String>> nonNullKeyarray = keyarray.map((e) => e.map((s) => s!).toList()).toList();
+          widget.ciphertext = adfgvxnEncrypt(widget.plaintext, nonNullKeyarray, keyword, Cryptext(letters: ciphertextChars, alphabet: widget.alphabet));
+        } catch (e) {
+          widget.ciphertext = widget.plaintext;
+        }
+      });
     });
-    widget.initSetCiphertextThenPlaintext((Cryptext cryptext) => {
-
+    widget.initSetCiphertextThenPlaintext((Cryptext cryptext) {
+      setState(() {
+        widget.ciphertext = cryptext;
+        widget.ciphertext.alphabet = widget.alphabet;
+        
+        try {
+          List<List<String>> nonNullKeyarray = keyarray.map((e) => e.map((s) => s!).toList()).toList();
+          widget.plaintext = adfgvxnDecrypt(widget.ciphertext, nonNullKeyarray, keyword, Cryptext(letters: ciphertextChars, alphabet: widget.alphabet));
+        } catch (e) {
+          widget.plaintext = widget.ciphertext;
+        }
+      });
     });
 
     widget.setBreakMethods([
 
     ]);
-
-    keyarray = getEmptyKeyArray();
   }
 
   void setCiphertextChars(List<String> newChars) {
@@ -97,23 +126,45 @@ class _PageCipherADFGVX extends State<PageCipherADFGVX> {
 
                   // Error about alphabet length vs ciphertext char amount
                   alphabetLengthMatch ? Container() : Text(
-                    "* Error: Alphabet Length: ${widget.alphabet.length}, Matrix Size: ${pow(ciphertextChars.length, 2)}",
+                    "* Error: Alphabet Length: ${widget.alphabet.length}, Matrix Size: ${pow(ciphertextChars.length, 2)} (Must be equal)",
                     style: CustomStyle.bodyError,
                   ),
                   alphabetLengthMatch ? Container() : SizedBox(height: 10),
 
-                  StringValueEntry(
-                    title: "Ciphertext Characters",
-                    onChanged: (String str) {
-                      if (str.length > cipherTextCharactersMax) {
-                        setCiphertextChars(str.substring(0, cipherTextCharactersMax).split(""));
-                      } else {
-                        setCiphertextChars(str.split(""));
-                      }
-                    },
-                    value: ciphertextChars.join(),
-                    defaultValue: defaultChars.join(),
-                    showResetButton: true,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: KeywordEntry(
+                          keyword: keyword,
+                          alphabet: widget.alphabet,
+                          setKeyword: (Cryptext? cryptext) {
+                            setState(() {
+                              keyword = cryptext ?? keyword;
+                            });
+                          }
+                        ),
+                      ),
+
+                      SizedBox(width: 10),
+
+                      SizedBox(
+                        width: 240,
+                        child: StringValueEntry(
+                          title: "Ciphertext Characters",
+                          onChanged: (String str) {
+                            if (str.length > cipherTextCharactersMax) {
+                              setCiphertextChars(str.substring(0, cipherTextCharactersMax).split(""));
+                            } else {
+                              setCiphertextChars(str.split(""));
+                            }
+                          },
+                          value: ciphertextChars.join(),
+                          defaultValue: defaultChars.join(),
+                          showResetButton: true,
+                        ),
+                      ),
+                    ],
                   ),
 
                   SizedBox( height: 10 ),
@@ -130,12 +181,12 @@ class _PageCipherADFGVX extends State<PageCipherADFGVX> {
                       Row(
                         children: [
                           MyTextButton(
-                              text: "Copy",
-                              onTap: () async {
-                                await Clipboard.setData(ClipboardData(
-                                  text: keyarray.map((e) {return e.join();}).join("\n")
-                                ));
-                              }
+                            text: "Copy",
+                            onTap: () async {
+                              await Clipboard.setData(ClipboardData(
+                                text: keyarray.map((e) { return e.join(); }).join("\n")
+                              ));
+                            }
                           ),
                           SizedBox(width: 10),
                           MyTextButton(
