@@ -94,7 +94,7 @@ class _AlphabetEditor extends State<AlphabetEditor> {
                 !widget.showResetButton ? Container() : const SizedBox(width: 10),
 
                 !widget.showDefaultButtons ? Container() : MyTextButton(
-                    text: 'Uppercase English',
+                    text: 'Uppercase',
                     onTap: () {
                       widget.setAlphabet(Alphabet());
                     }
@@ -102,9 +102,17 @@ class _AlphabetEditor extends State<AlphabetEditor> {
                 !widget.showDefaultButtons ? Container() : const SizedBox(width: 10),
 
                 !widget.showDefaultButtons ? Container() : MyTextButton(
-                    text: 'Lowercase English',
+                    text: 'Lowercase',
                     onTap: () {
                       widget.setAlphabet(Alphabet.fromString(letters: 'abcdefghijklmnopqrstuvwxyz'));
+                    }
+                ),
+                !widget.showDefaultButtons ? Container() : const SizedBox(width: 10),
+
+                !widget.showDefaultButtons ? Container() : MyTextButton(
+                    text: 'Uppercase + Digits',
+                    onTap: () {
+                      widget.setAlphabet(Alphabet.fromString(letters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'));
                     }
                 ),
               ],
