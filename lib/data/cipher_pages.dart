@@ -18,6 +18,6 @@ Map<String, Widget> getCipherPages(Alphabet defaultAlphabet) {
     'Rail Fence Cipher' : PageCipherRailFence(defaultAlphabet: defaultAlphabet),
     'Substitution Cipher' : PageCipherSubstitution(defaultAlphabet: defaultAlphabet),
     'Playfair Cipher' : PageCipherPlayfair(defaultAlphabet: Alphabet.fromString(letters: "ABCDEFGHIKLMNOPQRSTUVWXYZ")),
-    'ADFGVX Cipher' : PageCipherADFGVX(defaultAlphabet: defaultAlphabet),
+    'ADFGVX Cipher' : PageCipherADFGVX(defaultAlphabet: Alphabet.fromString(letters: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")),
   };
 }
