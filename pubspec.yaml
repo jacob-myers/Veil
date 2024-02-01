@@ -45,6 +45,9 @@ dependencies:
   # https://pub.dev/documentation/url_launcher/latest/url_launcher/url_launcher-library.html
   url_launcher: ^6.1.11
 
+  # For user selecting a file to save to.
+  file_picker: ^6.1.1
+
   # Uncomment for building on web (For firebase). Currently bugged package.
   # How to deploy to Firebase. https://firebase.google.com/docs/cli#windows-npm
   #firebase_core: ^2.11.0

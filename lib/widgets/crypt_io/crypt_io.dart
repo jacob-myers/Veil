@@ -43,14 +43,6 @@ class _CryptIO extends State<CryptIO> {
     widget.encrypt ? widget.setPlaintext(cryptext) : widget.setCiphertext(cryptext);
   }
 
-  Cryptext _getInput() {
-    return widget.encrypt ? widget.myPlaintext : widget.myCiphertext;
-  }
-
-  Cryptext _getOutput() {
-    return widget.encrypt ? widget.myCiphertext : widget.myPlaintext;
-  }
-
   @override
   Widget build(BuildContext context) {
     double contextWidth = MediaQuery.of(context).size.width;
@@ -111,7 +103,7 @@ class _CryptIO extends State<CryptIO> {
           children: [
             Expanded(
               child: CryptIOToolbarInput(
-                getInput: _getInput,
+                input: widget.encrypt ? widget.myPlaintext : widget.myCiphertext,
                 setInput: _setInput,
                 alphabet: widget.alphabet,
               ),
@@ -121,7 +113,7 @@ class _CryptIO extends State<CryptIO> {
 
             Expanded(
               child: CryptIOToolbarOutput(
-                getOutput: _getOutput,
+                output: widget.encrypt ? widget.myCiphertext : widget.myPlaintext,
               )
             ),
           ],

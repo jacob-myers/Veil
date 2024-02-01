@@ -6,18 +6,19 @@ import 'package:veil/data_structures/cryptext.dart';
 import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/widgets/crypt_io/crypt_io_button.dart';
 import 'package:veil/widgets/crypt_io/crypt_io_toolbar.dart';
+import 'package:veil/functions/veil_io.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
 
 class CryptIOToolbarInput extends StatefulWidget {
-  final Cryptext Function() getInput;
+  final Cryptext input;
   final Function(Cryptext) setInput;
   final Alphabet alphabet;
 
   CryptIOToolbarInput({
     super.key,
-    required this.getInput,
+    required this.input,
     required this.setInput,
     required this.alphabet,
   });
@@ -27,6 +28,7 @@ class CryptIOToolbarInput extends StatefulWidget {
 }
 
 class _CryptIOToolbarInput extends State<CryptIOToolbarInput> {
+
   @override
   Widget build(BuildContext context) {
     return CryptIOToolbar(
@@ -36,7 +38,7 @@ class _CryptIOToolbarInput extends State<CryptIOToolbarInput> {
           onTap: () {
             setState(() {
               widget.setInput(Cryptext(
-                  letters : widget.getInput().upper,
+                  letters : widget.input.upper,
                   alphabet: widget.alphabet));
             });
           },
@@ -47,7 +49,7 @@ class _CryptIOToolbarInput extends State<CryptIOToolbarInput> {
           onTap: () {
             setState(() {
               widget.setInput(Cryptext(
-                  letters : widget.getInput().lower,
+                  letters : widget.input.lower,
                   alphabet: widget.alphabet));
             });
           },
@@ -55,26 +57,23 @@ class _CryptIOToolbarInput extends State<CryptIOToolbarInput> {
 
         CryptIOButton(
           icon: Icon(Icons.file_upload_outlined),
-          onTap: () {
-            setState(() {
-              // TODO Upload txt file.
-            });
+          onTap: () async {
+            widget.setInput(await loadFromFile(widget.alphabet));
+            setState(() {});
           },
         ),
 
         CryptIOButton(
           icon: Icon(Icons.file_download_outlined),
           onTap: () {
-            setState(() {
-              // TODO Download as a txt file.
-            });
+            saveToFile(widget.input);
           },
         ),
 
         CryptIOButton(
           icon: Icon(Icons.copy),
           onTap: () async {
-            await Clipboard.setData(ClipboardData(text: widget.getInput().lettersAsString));
+            await Clipboard.setData(ClipboardData(text: widget.input.lettersAsString));
           },
         ),
 
@@ -86,7 +85,7 @@ class _CryptIOToolbarInput extends State<CryptIOToolbarInput> {
                 if (data?.text != '') {
                   widget.setInput(
                       Cryptext.fromString(
-                          data?.text ?? widget.getInput().lettersAsString,
+                          data?.text ?? widget.input.lettersAsString,
                           alphabet: widget.alphabet));
                 }
               });
