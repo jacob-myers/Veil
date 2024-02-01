@@ -48,6 +48,9 @@ dependencies:
   # For user selecting a file to save to.
   file_picker: ^6.1.1
 
+  # Because dart:html is garbage.
+  universal_html: ^2.2.4
+
   # Uncomment for building on web (For firebase). Currently bugged package.
   # How to deploy to Firebase. https://firebase.google.com/docs/cli#windows-npm
   #firebase_core: ^2.11.0

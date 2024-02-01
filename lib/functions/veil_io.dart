@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:html' as webFile; // My butt "Find a different library for your needs."
+import 'package:universal_html/html.dart' as webFile; // My bu
+// tt "Find a different library for your needs."
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:veil/data_structures/alphabet.dart';
