@@ -33,6 +33,8 @@ class _PermutationEntry extends State<PermutationEntry> {
 
   @override
   Widget build(BuildContext context) {
+    error = permParseError(widget.rawText, widget.alphabet);
+
     return StringValueEntry(
       title: 'Key (Permutation in cycle notation)',
       hintText: 'Enter permutation...',
@@ -43,18 +45,11 @@ class _PermutationEntry extends State<PermutationEntry> {
         setState(() {
           List<String> newPerm = parseCycleNotation(raw);
 
-          if (!permutationIsInAlphabet(newPerm, widget.alphabet)) {
-            error = 'Input includes characters not in alphabet.';
-            widget.setPerm(widget.perm, raw);
-          }
-          else if (!permutationIsUnique(newPerm)) {
-            error = 'Input includes repeat characters.';
-            widget.setPerm(widget.perm, raw);
-          }
-          else {
-            // Valid (includes an empty input).
-            error = null;
+          error = permParseError(raw, widget.alphabet);
+          if (error == null) {
             widget.setPerm(newPerm + getSingleLengthCycles(newPerm, widget.alphabet), raw);
+          } else {
+            widget.setPerm(widget.perm, raw);
           }
         });
       },

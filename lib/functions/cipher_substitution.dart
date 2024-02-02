@@ -109,19 +109,17 @@ bool permutationIsUnique(List<String> cyclePerm) {
 }
 
 
-List<String> parseCycleNotation(String raw, {String startDelimeter = "(", String endDelimeter = ")", bool alphabetContainsSpace = false}) {
+List<String> parseCycleNotation(String raw, {String startDelimeter = "(", String endDelimeter = ")"}) {
   // Build raw string for regex.
   String pattern = r'';
   pattern += '\\$startDelimeter.+?\\$endDelimeter';
-  pattern += alphabetContainsSpace ? "" : "| *?[^ \\$startDelimeter\\$endDelimeter]+? +?";
+  pattern += "| *?[^ \\$startDelimeter\\$endDelimeter]+? +?";
   RegExp cycleMatcher = RegExp(pattern);
-  //print(pattern);
-  raw = ' $raw ';
 
   // Matches all cases of delimeters or surrounding some stuff.
   List<String> cycles = cycleMatcher.allMatches(raw).map((e) => e.group(0)!).toList();
-  // Remove all delimeter characters.
-  RegExp delimeterMatcher = RegExp(r'\)* *\(*');
+  String delimeterPattern = r'' + '\\$endDelimeter*\\$startDelimeter*';
+  RegExp delimeterMatcher = RegExp(delimeterPattern);
   /*
   for (String c in cycles) {
     print('|$c|');
@@ -133,9 +131,28 @@ List<String> parseCycleNotation(String raw, {String startDelimeter = "(", String
     print('|$c|');
   }
   */
-  // Remove all blank matches (had opening and closing delimeter and no content.
+  // Remove all blank matches (had opening and closing delimeter and no content).
   cycles.removeWhere((element) => element == "");
   return cycles;
+}
+
+/// Returns an error if current raw doesn't work in parsing a permutation.
+/// Returns null if there is no error.
+String? permParseError(String raw, Alphabet alphabet) {
+  List<String> newPerm = parseCycleNotation(raw);
+
+  //TODO: check if any characters are outside the delimiters and display an error.
+
+  if (!permutationIsInAlphabet(newPerm, alphabet)) {
+    return 'Input includes characters not in alphabet.';
+  }
+  else if (!permutationIsUnique(newPerm)) {
+    return 'Input includes repeat characters.';
+  }
+  else {
+    // Valid (includes an empty input).
+    return null;
+  }
 }
 
 /// Fills remaining cycles (the ones that go to themselves).
@@ -172,6 +189,10 @@ String buildCyclePermutationVisual(List<String> cyclePerm, Alphabet alphabet) {
     throw Exception("BuildVisualOfIncompleteAlphabet");
   }
 
+  // First sorts by alphabetical. Has an effect if alphabet changes.
+  cyclePerm.sort((a, b) => alphabet.indexOf(a[0]).compareTo(alphabet.indexOf(b[0])));
+  // Sorts by length of cycle piece. Larger cycle pieces are put first.
+  cyclePerm.sort((a, b) => -a.length.compareTo(b.length));
   return cyclePerm.map((cycle) => "($cycle)").join();
 }
 
