@@ -90,4 +90,10 @@ class CustomStyle {
     color: pageScheme.onSecondary,
   );
 
+  static TextStyle characterCounter = TextStyle(
+    fontSize: 16,
+    fontFamily: 'JetBrainsMono',
+    color: pageScheme.onSecondary,
+  );
+
 }

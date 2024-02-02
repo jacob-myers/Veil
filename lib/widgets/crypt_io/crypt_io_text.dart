@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // Local
 import 'package:veil/data_structures/alphabet.dart';
 import 'package:veil/data_structures/cryptext.dart';
+import 'package:veil/data/app_settings.dart';
 
 // Styles
 import 'package:veil/styles/styles.dart';
@@ -39,6 +40,7 @@ class CryptIOText extends StatefulWidget {
 class _CryptIOText extends State<CryptIOText> {
   var textFieldController = TextEditingController();
   FocusNode focusNode = FocusNode();
+  int charLimit = AppSettings.characterLimit;
 
   void setText([Cryptext? cryptext]) {
     setState(() {
@@ -55,7 +57,6 @@ class _CryptIOText extends State<CryptIOText> {
     setText();
 
     return Column(
-      //crossAxisAlignment: CrossAxisAlignment.start,
       children: [
 
         widget.hideTitle? Text(widget.title, style: CustomStyle.headers) : Container(),
@@ -63,7 +64,6 @@ class _CryptIOText extends State<CryptIOText> {
         widget.hideTitle? SizedBox(height: 20) : Container(),
 
         TextField(
-          //enabled: widget.enabled,
           readOnly: !widget.enabled,
           style: CustomStyle.textFieldEntry,
           controller: textFieldController,
@@ -72,9 +72,9 @@ class _CryptIOText extends State<CryptIOText> {
           keyboardType: TextInputType.multiline,
           textInputAction: TextInputAction.newline,
 
-          //textInputAction: TextInputAction.done,
           maxLines: null,
           minLines: 5,
+          //maxLength: widget.enabled ? AppSettings.characterLimit : null,
 
           // Styling.
           cursorColor: CustomStyle.pageScheme.onPrimary,
@@ -99,6 +99,12 @@ class _CryptIOText extends State<CryptIOText> {
             //setText(Cryptext.fromString(str));
             // Can't handle Windows newlines.
             str = str.replaceAll('\r\n', '\n');
+
+            // Manual enforcement of character limit (didn't like formatting for default)
+            if (str.length > charLimit) {
+              str = widget.enabled ? str.substring(0, charLimit) : str;
+            }
+
             widget.onChanged(Cryptext.fromString(str, alphabet: widget.alphabet));
           }
         ),
