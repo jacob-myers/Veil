@@ -18,7 +18,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      //title: 'veil',
 
       theme: ThemeData(
         primarySwatch: CustomStyle.pageSwatch,
