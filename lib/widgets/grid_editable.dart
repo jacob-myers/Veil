@@ -82,13 +82,9 @@ class _GridEditable extends State<GridEditable> {
                       borderRadius: BorderRadius.zero,
                       hintText: "",
                       value: widget.values[index_r][index_c] ?? "",
+                      maxLength: 1,
                       onChanged: (String str) {
                         setState(() {
-                          if (widget.charLimit != null) {
-                            if (str.length > widget.charLimit!) {
-                              str = str.substring(0, widget.charLimit);
-                            }
-                          }
                           widget.values[index_r][index_c] = str;
                           widget.onValueChange(str);
                         });

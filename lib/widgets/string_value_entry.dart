@@ -22,6 +22,7 @@ class StringValueEntry extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final TextAlign? textAlign;
   final BorderRadius? borderRadius;
+  final int? maxLength;
 
   const StringValueEntry({
     super.key,
@@ -36,6 +37,7 @@ class StringValueEntry extends StatefulWidget {
     this.padding,
     this.textAlign,
     this.borderRadius,
+    this.maxLength,
   });
 
   @override
@@ -58,6 +60,7 @@ class _StringValueEntry extends State<StringValueEntry> {
       padding: widget.padding,
       textAlign: widget.textAlign,
       borderRadius: widget.borderRadius,
+      maxLength: widget.maxLength,
     );
   }
 }

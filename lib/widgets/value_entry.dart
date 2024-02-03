@@ -22,6 +22,7 @@ class ValueEntry extends StatefulWidget {
   final TextAlign? textAlign;
   final BorderRadius? borderRadius;
   final Widget? contentRightOfTextEntry;
+  final int? maxLength;
 
   ValueEntry({
     super.key,
@@ -39,6 +40,7 @@ class ValueEntry extends StatefulWidget {
     this.textAlign,
     this.borderRadius,
     this.contentRightOfTextEntry,
+    this.maxLength
   });
 
   @override
@@ -71,6 +73,7 @@ class _ValueEntry extends State<ValueEntry> {
                 style: widget.style ?? CustomStyle.textFieldEntry,
                 textAlign: widget.textAlign ?? TextAlign.left,
                 maxLines: 1,
+                //maxLength: widget.maxLength,
 
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.done,
@@ -93,6 +96,12 @@ class _ValueEntry extends State<ValueEntry> {
 
                 // When the text is changed.
                 onChanged: (String str) {
+                  // Enforces max length.
+                  if (widget.maxLength != null) {
+                    if (str.length > widget.maxLength!) {
+                      str = str.substring(0, widget.maxLength);
+                    }
+                  }
                   widget.hideError = false;
                   widget.onChanged(str);
                 }
