@@ -33,7 +33,7 @@ class _PermutationEntry extends State<PermutationEntry> {
 
   @override
   Widget build(BuildContext context) {
-    error = permParseError(widget.rawText, widget.alphabet);
+    error = permParseError(widget.rawText, widget.alphabet, '(', ')');
 
     return StringValueEntry(
       title: 'Key (Permutation in cycle notation)',
@@ -45,7 +45,7 @@ class _PermutationEntry extends State<PermutationEntry> {
         setState(() {
           List<String> newPerm = parseCycleNotation(raw);
 
-          error = permParseError(raw, widget.alphabet);
+          error = permParseError(raw, widget.alphabet, '(', ')');
           if (error == null) {
             widget.setPerm(newPerm + getSingleLengthCycles(newPerm, widget.alphabet), raw);
           } else {

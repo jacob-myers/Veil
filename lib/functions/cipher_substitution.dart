@@ -109,28 +109,21 @@ bool permutationIsUnique(List<String> cyclePerm) {
 }
 
 
-List<String> parseCycleNotation(String raw, {String startDelimeter = "(", String endDelimeter = ")"}) {
+List<String> parseCycleNotation(String raw, {String startDelimiter = "(", String endDelimiter = ")"}) {
   // Build raw string for regex.
+  // https://stackoverflow.com/questions/3697644/regex-match-text-in-between-delimiters
   String pattern = r'';
-  pattern += '\\$startDelimeter.+?\\$endDelimeter';
-  pattern += "| *?[^ \\$startDelimeter\\$endDelimeter]+? +?";
+  pattern += '\[$startDelimiter\](.*?)\[$endDelimiter\]';
+  //pattern += '\\$startDelimeter.+?\\$endDelimeter';
+  //pattern += "| *?[^ \\$startDelimeter\\$endDelimeter]+? +?";
   RegExp cycleMatcher = RegExp(pattern);
 
-  // Matches all cases of delimeters or surrounding some stuff.
+  // Matches all cases of delimeters to remove them (cycles must be preserved).
   List<String> cycles = cycleMatcher.allMatches(raw).map((e) => e.group(0)!).toList();
-  String delimeterPattern = r'' + '\\$endDelimeter*\\$startDelimeter*';
+  String delimeterPattern = r'' + '\\$endDelimiter*\\$startDelimiter*';
   RegExp delimeterMatcher = RegExp(delimeterPattern);
-  /*
-  for (String c in cycles) {
-    print('|$c|');
-  }
-  */
   cycles = cycles.map((cycle) => cycle = cycle.replaceAll(delimeterMatcher, "")).toList();
-  /*
-  for (String c in cycles) {
-    print('|$c|');
-  }
-  */
+
   // Remove all blank matches (had opening and closing delimeter and no content).
   cycles.removeWhere((element) => element == "");
   return cycles;
@@ -138,16 +131,23 @@ List<String> parseCycleNotation(String raw, {String startDelimeter = "(", String
 
 /// Returns an error if current raw doesn't work in parsing a permutation.
 /// Returns null if there is no error.
-String? permParseError(String raw, Alphabet alphabet) {
+String? permParseError(String raw, Alphabet alphabet, String startDelimiter, String endDelimiter) {
   List<String> newPerm = parseCycleNotation(raw);
-
-  //TODO: check if any characters are outside the delimiters and display an error.
+  
+  // Gets all the raw characters in and outside of the delimeters.
+  var inputChars = raw.split('').where((e) => e != startDelimiter && e != endDelimiter && e != ' ').toList();
+  if (newPerm.join().split('').contains(' ')) {
+    inputChars.add(' ');
+  }
 
   if (!permutationIsInAlphabet(newPerm, alphabet)) {
     return 'Input includes characters not in alphabet.';
   }
   else if (!permutationIsUnique(newPerm)) {
     return 'Input includes repeat characters.';
+  }
+  else if (inputChars.length != newPerm.join().length) {
+    return 'Input includes characters outside delimiters.';
   }
   else {
     // Valid (includes an empty input).
