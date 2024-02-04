@@ -78,6 +78,7 @@ class _PermutationEntry extends State<PermutationEntry> {
   @override
   Widget build(BuildContext context) {
     error = permParseError(widget.rawText, widget.alphabet, startDelimiter, endDelimiter);
+    delimError = findDelimError();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
