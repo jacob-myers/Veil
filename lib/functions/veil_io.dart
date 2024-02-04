@@ -46,12 +46,25 @@ Future<Cryptext> loadFromFile(Alphabet a) async {
     allowedExtensions: ['txt'],
   );
 
-  if (result != null) {
-    String contents = utf8.decode(result.files.first.bytes!);
-    //String fileName = result.files.first.name;
-
-    return Cryptext.fromString(contents, alphabet: a);
+  // Apparently, ya just can't read from a file any other way on web.
+  if (kIsWeb) {
+    if (result != null) {
+      String contents = utf8.decode(result.files.first.bytes!);
+      return Cryptext.fromString(contents, alphabet: a);
+    }
+  // Windows way.
+  } else if (result != null) {
+    try {
+      File file = File(result.files.first.path!);
+      String contents = await file.readAsString();
+      return Cryptext.fromString(contents, alphabet: a);
+    } catch (e) {
+      // If there is an error reading the file.
+      print(e);
+      return Cryptext(alphabet: a);
+    }
   }
 
+  // If no file is selected.
   return Cryptext(alphabet: a);
 }
