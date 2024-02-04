@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:tuple/tuple.dart';
 import 'package:veil/data_structures/cryptext.dart';
 import 'package:veil/data_structures/alphabet.dart';
@@ -109,20 +110,29 @@ bool permutationIsUnique(List<String> cyclePerm) {
 }
 
 
-List<String> parseCycleNotation(String raw, {String startDelimiter = "(", String endDelimiter = ")"}) {
+List<String> parseCycleNotation(String raw, String startDelimiter, String endDelimiter) {
+  String origStartDelim = startDelimiter;
+  String origEndDelim = endDelimiter;
+
+  // Have to manually check and add escapes to '\' and ']'. Lord help me.
+  if (startDelimiter == '\\' || startDelimiter == ']') {
+    startDelimiter = '\\$startDelimiter';
+  }
+  if (endDelimiter == '\\' || endDelimiter == ']') {
+    endDelimiter = '\\$endDelimiter';
+  }
+
   // Build raw string for regex.
   // https://stackoverflow.com/questions/3697644/regex-match-text-in-between-delimiters
   String pattern = r'';
   pattern += '\[$startDelimiter\](.*?)\[$endDelimiter\]';
-  //pattern += '\\$startDelimeter.+?\\$endDelimeter';
-  //pattern += "| *?[^ \\$startDelimeter\\$endDelimeter]+? +?";
   RegExp cycleMatcher = RegExp(pattern);
 
   // Matches all cases of delimeters to remove them (cycles must be preserved).
   List<String> cycles = cycleMatcher.allMatches(raw).map((e) => e.group(0)!).toList();
-  String delimeterPattern = r'' + '\\$endDelimiter*\\$startDelimiter*';
-  RegExp delimeterMatcher = RegExp(delimeterPattern);
-  cycles = cycles.map((cycle) => cycle = cycle.replaceAll(delimeterMatcher, "")).toList();
+
+  cycles = cycles.map((cycle) => cycle = cycle.replaceAll('$origEndDelim', '')).toList();
+  cycles = cycles.map((cycle) => cycle = cycle.replaceAll('$origStartDelim', '')).toList();
 
   // Remove all blank matches (had opening and closing delimeter and no content).
   cycles.removeWhere((element) => element == "");
@@ -132,8 +142,8 @@ List<String> parseCycleNotation(String raw, {String startDelimiter = "(", String
 /// Returns an error if current raw doesn't work in parsing a permutation.
 /// Returns null if there is no error.
 String? permParseError(String raw, Alphabet alphabet, String startDelimiter, String endDelimiter) {
-  List<String> newPerm = parseCycleNotation(raw);
-  
+  List<String> newPerm = parseCycleNotation(raw, startDelimiter, endDelimiter);
+
   // Gets all the raw characters in and outside of the delimeters.
   var inputChars = raw.split('').where((e) => e != startDelimiter && e != endDelimiter && e != ' ').toList();
   if (newPerm.join().split('').contains(' ')) {
@@ -224,7 +234,7 @@ void main() {
   print(c);
   print(p_decrypted);
 
-  print(parseCycleNotation("   (ABCD)    EFG  () ()"));
+  print(parseCycleNotation("   (ABCD)    EFG  () ()", "(", ")"));
 
   //String raw = r'';
   //raw += "HI";
