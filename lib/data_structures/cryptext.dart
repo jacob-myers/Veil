@@ -110,8 +110,8 @@ class Cryptext {
   }
 
   /// Uses the String Cipher extension functions to split the text into chunks.
-  Iterable<String> chunks(int numChunks) {
-    return lettersAsString.chunks(numChunks);
+  List<String> chunks(int chunkLen, [String? padWith]) {
+    return lettersInAlphabet.join().chunks(chunkLen, padWith);
   }
 
   /// Returns a deep copy of self.
