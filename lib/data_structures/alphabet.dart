@@ -42,7 +42,7 @@ class Alphabet {
 
   /// Returns the corresponding letter from a number based on it's position in the alphabet
   String letterizeNumber(int number) {
-    return letters[number];
+    return letters[mod(number)];
   }
 
   /// Get the list of letters (as ints).
